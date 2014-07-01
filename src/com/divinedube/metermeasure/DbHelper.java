@@ -23,7 +23,8 @@ public class DbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = String.format("create table %s (%s primary key, %s text, %s text, %s int, %s text, %s date)",
+        String sql = String.format
+             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer)",
 
                 MeterReadingsContract.TABLE,
                 MeterReadingsContract.Column.ID,

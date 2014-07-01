@@ -3,6 +3,8 @@ package com.divinedube.metermeasure;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -29,6 +31,10 @@ public class NewMeterReadingsActivity extends Activity{
     double reading;
     String note;
 
+    long newRowId;
+    ContentValues values;
+    SQLiteDatabase db;
+
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_new);
@@ -48,28 +54,31 @@ public class NewMeterReadingsActivity extends Activity{
             note = mEditTextNote.getText().toString();
 
             DbHelper dbHelper = new DbHelper(this);
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            db = dbHelper.getWritableDatabase();
 
-            ContentValues values = new ContentValues();
 
-            values.put(MeterReadingsContract.Column.ID, BaseColumns._ID);
+             values = new ContentValues();
+
+           // values.put(MeterReadingsContract.Column.ID, newRowId);
+            values.put(MeterReadingsContract.Column.DAY, day);
             values.put(MeterReadingsContract.Column.TIME, time);
             values.put(MeterReadingsContract.Column.READING, reading);
             values.put(MeterReadingsContract.Column.NOTE, note);
-            values.put(MeterReadingsContract.Column.CREATED_AT, Build.TIME);
+            values.put(MeterReadingsContract.Column.CREATED_AT, System.currentTimeMillis());
 
-            long newRowId;
+             getContentResolver().insert(MeterReadingsContract.CONTENT_URI,values);
 
-                Log.d(TAG, "inserting " + BaseColumns._ID + time + reading + note + " into db " +
-                        MeterReadingsContract.TABLE);
 
-                newRowId = db.insert(MeterReadingsContract.TABLE,MeterReadingsContract.Column.NULL_COLUMN, values);
+
+                Log.d(TAG, "inserting "  + time + reading + note + " into db " +
+                        MeterReadingsContract.TABLE + " at "+System.currentTimeMillis());
+
+            //newRowId = db.insert(MeterReadingsContract.TABLE, null, values);
 
             Toast.makeText(this, "Your Meter Readings have been saved", Toast.LENGTH_LONG).show();
 
         }catch (Exception e){
             e.printStackTrace();
-            Log.e(TAG, e.getMessage());
             Toast.makeText(this, "Eish!.Could not save Meter Readings", Toast.LENGTH_LONG).show();
         }
     }

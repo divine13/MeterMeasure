@@ -1,5 +1,7 @@
 package com.divinedube.metermeasure;
 
+import android.content.ContentUris;
+import android.net.Uri;
 import android.provider.BaseColumns;
 
 /**
@@ -11,9 +13,18 @@ public class MeterReadingsContract {
 
     public static final String DB_NAME = "meterReadingsTable.db";
     public static final String TABLE = "meter";
-    public static final String DEFAULT_SORT = Column.CREATED_AT;
+    public static final String DEFAULT_SORT = Column.CREATED_AT + " DESC";
     public static final int DB_VERSION = 1;
     public static final String DROP_TABLE = "drop table if exists " + TABLE ;
+    public static final String AUTHORITY = "com.divinedube.metermeasure.MeterRecordingsProvider";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE);
+    public static final String READING_TYPE_ITEM =
+            "vnd.android.cursor.type/vnd.com.divinedube.metermeasure.provider.meter";
+    public static final String READING_TYPE_DIR =
+            "vnd.android.cursor.dir/vnd.com.divinedube.metermeasure.provider.meter";
+
+    public static final int METER_TYPE = 1;
+    public static final int METER_DIR = 2;
 
     public class Column{
         public static final String ID = BaseColumns._ID;
@@ -22,7 +33,6 @@ public class MeterReadingsContract {
         public static final String TIME = "time"; //i will make this int for now in the table  TODO
         public static final String READING = "reading";
         public static final String NOTE = "note";
-        public static final String NULL_COLUMN = "null_column";
 
     }
 }

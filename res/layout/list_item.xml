@@ -8,14 +8,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity" >
 
- <TextView
-     android:id="@+id/list_item_textViewDayMain"
-     android:layout_width="wrap_content"
-     android:layout_height="wrap_content"
-     android:layout_alignParentTop="true"
-     android:layout_alignParentLeft="true"
-     android:text="@string/day"
-     android:textSize="22sp"/>
+    <TextView
+        android:id="@+id/list_item_textViewDayMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:text="@string/day"
+        android:textSize="22sp"/>
 
     <TextView
         android:id="@+id/list_item_textViewTimeMain"
@@ -39,7 +39,5 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_textViewReadingMain"
         android:text="@string/notes"/>
-
-
 
 </RelativeLayout>
