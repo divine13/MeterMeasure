@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.SimpleCursorAdapter;
 
 /**
@@ -35,11 +36,10 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
     private SimpleCursorAdapter mAdapter;
     private Cursor mCursor;
 
-
     @Override
     public void onActivityCreated(Bundle savedInstance){
         super.onActivityCreated(savedInstance);
-        setEmptyText("Loading Saved Meter Readings...");
+        setEmptyText("Searching for Saved Meter Readings...");
 
         DbHelper dbHelper = new DbHelper(getActivity());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -122,4 +122,10 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
     public void onLoaderReset(Loader<Cursor> loader) {
        mAdapter.swapCursor(null);
     }
+
+//   TODO after a long click let people delete and edit the data
+// public void registerForContextMenu(View view) {
+//        super.registerForContextMenu(view);
+    //check out
+//    }
 }

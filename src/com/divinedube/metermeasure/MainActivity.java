@@ -30,6 +30,9 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
             case R.id.action_new:
                 startActivity(new Intent(this, NewMeterReadingsActivity.class));
+                return true;
+            case R.id.action_about:
+                startActivity(new Intent(this,AboutActivity.class));
             default:
                 return false;
         }
