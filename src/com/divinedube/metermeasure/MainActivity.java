@@ -33,6 +33,13 @@ public class MainActivity extends Activity {
                 return true;
             case R.id.action_about:
                 startActivity(new Intent(this,AboutActivity.class));
+                return true;
+            case R.id.action_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.action_stats:
+                startActivity(new Intent(this, MeterReadingsDiff.class));
+                return true;
             default:
                 return false;
         }

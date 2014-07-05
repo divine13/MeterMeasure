@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sql = String.format
-             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer)",
+             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s integer)",
 
                 MeterReadingsContract.TABLE,
                 MeterReadingsContract.Column.ID,
@@ -32,7 +32,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MeterReadingsContract.Column.TIME,
                 MeterReadingsContract.Column.READING,
                 MeterReadingsContract.Column.NOTE,
-                MeterReadingsContract.Column.CREATED_AT);
+                MeterReadingsContract.Column.CREATED_AT,
+                MeterReadingsContract.Column.DAY_DIFF);
 
        Log.d(TAG, "creating the db with this " + sql + " command in the onCreate method");
         db.execSQL(sql);

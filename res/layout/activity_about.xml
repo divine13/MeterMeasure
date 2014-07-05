@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_alignBottom="@+id/about"
-        android:background="#ffff2a02"
+        android:background="#ff1466d1"
         android:id="@+id/textView" />
     <TextView
         android:id="@+id/brief_about"

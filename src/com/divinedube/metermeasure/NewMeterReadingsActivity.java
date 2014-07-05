@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
@@ -50,9 +52,9 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         setContentView(R.layout.activity_new);
         Calendar cal = Calendar.getInstance();
 
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
+        int hour = cal.get(Calendar.HOUR_OF_DAY);           //TODO refactor to use MeterUtils
         int minute = cal.get(Calendar.MINUTE);              //might have to make these global
-        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH); // 06
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);    // 06
         int month = cal.get(Calendar.MONTH);
 
         mEditTextDay = (EditText) findViewById(R.id.editTextDay);
@@ -60,9 +62,12 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         mEditTextReading = (EditText) findViewById(R.id.editTextReading);
         mEditTextNote = (EditText) findViewById(R.id.editTextNote);
         spinner = (Spinner) findViewById(R.id.spinner); //might just take out all of it just use cal date utils
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        String CheckTimeOrCurrent = prefs.getString("time", hour + ":" + minute);  //TODO refactor to use MeterUtils
 
         mEditTextDay.setText(dayOfMonth + " " + DateUtils.getMonthString(month, DateUtils.LENGTH_SHORT ));  // 26/06
-        mEditTextTime.setText(hour + ":" + minute);//todo change this to shared prefs preferences time set by user
+        mEditTextTime.setText(CheckTimeOrCurrent);
         //spinner.getItemAtPosition()
         ArrayAdapter<CharSequence> spinnerAdapter =
                 ArrayAdapter.createFromResource(this,R.array.week_days_array,android.R.layout.simple_spinner_item);
