@@ -2,53 +2,73 @@ package com.divinedube.metermeasure;
 
 import android.app.ListFragment;
 import android.app.LoaderManager;
-import android.content.CursorLoader;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
-import android.view.View;
-import android.widget.SimpleCursorAdapter;
+import android.widget.ArrayAdapter;
 
 /**
- * Created by Divine Dube on 2014/06/29.
+ * Created by Divine Dube on 2014/07/06.
  */
-public class FragmentList extends ListFragment implements LoaderManager.LoaderCallbacks<Cursor>{
+public class DiffFragmentListArray extends ListFragment implements LoaderManager.LoaderCallbacks<ArrayMap> {
 
-    private static final String TAG = FragmentList.class.getSimpleName();
+    private static String TAG= DiffFragmentListArray.class.getSimpleName();
 
-    private static final String[] FROM = {
-            MeterReadingsContract.Column.ID,
-            MeterReadingsContract.Column.DAY,
-            MeterReadingsContract.Column.TIME,
-            MeterReadingsContract.Column.READING,
-            MeterReadingsContract.Column.NOTE
-    };
-    private static final int[] TO = {
-            android.R.id.empty,
-            R.id.list_item_textViewDayMain,
-            R.id.list_item_textViewTimeMain,
-            R.id.list_item_textViewReadingMain,
-            R.id.list_item_textViewNoteMain
-    };
-    private static final int LOADER_ID = 36;
-    private SimpleCursorAdapter mAdapter;
-    private Cursor mCursor;
+    private static final  int[] TO = {R.id.list_item_day_one, R.id.list_item_day_two};
+
+    SharedPreferences preferences;
+    MeterUtils util;
+    Cursor mCursor;
+    double reading;
+    String defaultTime;
+    String day;
+    ArrayMap<String, Double> arrayMap;
+    private ArrayAdapter mArrayAdapter;
+
 
     @Override
-    public void onActivityCreated(Bundle savedInstance){
+    public void onActivityCreated(Bundle savedInstance) {
         super.onActivityCreated(savedInstance);
-        setEmptyText("Searching for Saved Meter Readings...");
+        preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String defaultTime = preferences.getString("time", "");
+        util = new MeterUtils();
+        String currentTime = util.getCurrentTime();
 
-        DbHelper dbHelper = new DbHelper(getActivity());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        if (defaultTime.equals(currentTime) || TextUtils.isEmpty(currentTime)) {
+            setEmptyText("Please add the time, that you always check your meter box readings to your settings");
+        } else {
+            String[] selectionArgs = {defaultTime};
+            mCursor = getActivity().getContentResolver().query
+                    (
+                            MeterReadingsContract.CONTENT_URI, null,
+                            MeterReadingsContract.THE_DIFF_SELECTION_STATEMENT,
+                            selectionArgs,
+                            MeterReadingsContract.NORMAL_SORT_ORDER
+                    );
+            int noC = mCursor.getCount();
 
-        mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item, null, FROM, TO, 0);
-        setListAdapter(mAdapter);
+            while (mCursor.moveToNext()) {
+                int i = mCursor.getPosition();
+                i = i + 1;
+                Log.d(TAG, "now At " + i);
+                double r = 0;
+                reading = mCursor.getDouble(3);
+                day = mCursor.getString(1);
+                arrayMap = new ArrayMap<String, Double>();
+                arrayMap.put(day, reading);
+                Log.d(TAG, " got  " + reading + " for  " + day);
+            }
 
-        getLoaderManager().initLoader(LOADER_ID,null,this);
-    }
+
+
+           // mArrayAdapter = new ArrayAdapter(getActivity(), R.layout.list_item_meter_reading_diff,arrayMap);
+        }
+    }// end onCreate
 
     /**
      * Instantiate and return a new Loader for the given ID.
@@ -58,20 +78,15 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
      * @return Return a new Loader instance that is ready to start loading.
      */
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id != id) return null;
-        Log.d(TAG, "onCreate Loader");
-
-        return new CursorLoader(
-                getActivity(),MeterReadingsContract.CONTENT_URI, null, null, null, MeterReadingsContract.DEFAULT_SORT);
+    public Loader<ArrayMap> onCreateLoader(int id, Bundle args) {
+       return null;
     }
 
     /**
      * Called when a previously created loader has finished its load.  Note
      * that normally an application is <em>not</em> allowed to commit fragment
      * transactions while in this call, since it can happen after an
-     * activity's state is saved.
-     * <p/>
+     * activity's state is saved.  See {@link
      * <p>This function is guaranteed to be called prior to the release of
      * the last data that was supplied for this Loader.  At this point
      * you should remove all use of the old data (since it will be released
@@ -105,8 +120,8 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
      * @param data   The data generated by the Loader.
      */
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        mAdapter.swapCursor(data);
+    public void onLoadFinished(Loader<ArrayMap> loader, ArrayMap data) {
+
     }
 
     /**
@@ -117,13 +132,7 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
      * @param loader The Loader that is being reset.
      */
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-       mAdapter.swapCursor(null);
-    }
+    public void onLoaderReset(Loader<ArrayMap> loader) {
 
-//   TODO after a long click let people delete and edit the data
-// public void registerForContextMenu(View view) {
-//        super.registerForContextMenu(view);
-    //check out
-//    }
+    }
 }

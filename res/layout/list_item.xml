@@ -15,7 +15,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:text="@string/day"
-        android:textSize="22sp"/>
+        android:textSize="15sp"/>
 
     <TextView
         android:id="@+id/list_item_textViewTimeMain"
@@ -24,7 +24,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignBaseline="@id/list_item_textViewDayMain"
         android:text="@string/time"
-        android:textSize="22sp"/>
+        android:textSize="15sp"/>
     <TextView
         android:id="@+id/list_item_textViewReadingMain"
         android:layout_width="wrap_content"
@@ -32,7 +32,7 @@
         android:layout_below="@id/list_item_textViewDayMain"
         android:textStyle="bold"
         android:text="@string/reading"
-        android:textSize="30sp"/>
+        android:textSize="20sp"/>
     <TextView
         android:id="@+id/list_item_textViewNoteMain"
         android:layout_width="wrap_content"

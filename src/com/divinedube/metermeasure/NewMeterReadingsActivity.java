@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -61,7 +62,7 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         mEditTextTime = (EditText) findViewById(R.id.editTextTime);
         mEditTextReading = (EditText) findViewById(R.id.editTextReading);
         mEditTextNote = (EditText) findViewById(R.id.editTextNote);
-        spinner = (Spinner) findViewById(R.id.spinner); //might just take out all of it just use cal date utils
+        spinner = (Spinner) findViewById(R.id.spinner); //todo might just take out all of it just use cal date utils
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         String CheckTimeOrCurrent = prefs.getString("time", hour + ":" + minute);  //TODO refactor to use MeterUtils
@@ -116,7 +117,22 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
          */
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mEditTextTime.setText(hourOfDay + ":" +  minute);
+
+            String twoDecMin = "";
+            Integer min = (Integer) minute;
+            String minAsS = min.toString();
+
+            Log.d(TAG, "string val for min is " + minAsS);
+            if (min == 0){
+                twoDecMin = minAsS + "0";
+            }
+            else if ((minAsS.length()) == 1){
+                twoDecMin =  "0" + min;
+            }else {
+                twoDecMin = minAsS;
+            }
+
+            mEditTextTime.setText(hourOfDay + ":" + twoDecMin);
         }
 
     }
@@ -143,7 +159,6 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
             values.put(MeterReadingsContract.Column.NOTE, note);
             values.put(MeterReadingsContract.Column.CREATED_AT, System.currentTimeMillis());
             //todo there must be a column for differences in readings
-            //must have settings activity where i can get the time
 
              getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
 

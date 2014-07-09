@@ -11,6 +11,9 @@
     <string name="time_summary">Just tell us the time at which you always check the meter reading </string>
     <string name="check_time">Check Time</string>
     <string name="show_your_meter_stats">Stats</string>
+    <string name="and_string"> and </string>
+    <string name="day_one">Day one</string>
+    <string name="day_two">Day two</string>
 
     <string name="day">Day</string>
     <string name="time">Time</string>

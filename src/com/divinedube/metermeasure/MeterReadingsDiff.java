@@ -9,21 +9,26 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
 /**
  * Created by Divine Dube on 2014/07/04.
  */
+
+//Todo Strap this class
 public class MeterReadingsDiff extends FragmentActivity {
 
     SharedPreferences prefs;
 
-    int reading;
+    double reading;
     String defaultTime;
     String day;
     String currentTime;
     Cursor mCursor;
+    ArrayMap<String, Double> arrayMap;
+
     //select all rows with the the default time and then just get the reading
     //
     private final String TAG = MeterReadingsDiff.class.getSimpleName();
@@ -45,7 +50,7 @@ public class MeterReadingsDiff extends FragmentActivity {
 
         defaultTime = prefs.getString("time", currentTime);
         if (defaultTime.equals(currentTime) || TextUtils.isEmpty(defaultTime)){
-           Toast.makeText(this,"Please add the time that you always check your meter box readings to your settings ",
+           Toast.makeText(this,"please set the default time that you always check your meter reading  ",
                    Toast.LENGTH_LONG).show();
             finish();
         }else {
@@ -61,17 +66,22 @@ public class MeterReadingsDiff extends FragmentActivity {
                        MeterReadingsContract.NORMAL_SORT_ORDER
                );
         int noC = mCursor.getCount();
-        double s;
+
         while (mCursor.moveToNext()){
             int i = mCursor.getPosition();
-            i = i + 1;
             Log.d(TAG,"now At " + i );
-               double r = 0;
-                s = mCursor.getDouble(3);
-               Log.d(TAG," got  " + s );
-        }
+               reading = mCursor.getDouble(3);
+               day = mCursor.getString(1);
+            arrayMap = new ArrayMap<String, Double>();
+            arrayMap.put(day, reading);
+               Log.d(TAG," got  " + reading + " for  " + day);
 
+               double dayReading = arrayMap.get(day);
+               Log.d(TAG, " reading: " + dayReading + " for: " + arrayMap.keyAt(i));
+
+        }
         Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show();
+
 
     }
 }
