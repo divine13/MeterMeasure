@@ -2,6 +2,7 @@ package com.divinedube.metermeasure;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -12,6 +13,8 @@ import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
+
+import java.util.Set;
 
 /**
  * Created by Divine Dube on 2014/07/04.
@@ -65,21 +68,23 @@ public class MeterReadingsDiff extends FragmentActivity {
                        selectionArgs,
                        MeterReadingsContract.NORMAL_SORT_ORDER
                );
-        int noC = mCursor.getCount();
 
+        int noC = mCursor.getCount();
+        ContentValues values = new ContentValues();
         while (mCursor.moveToNext()){
             int i = mCursor.getPosition();
             Log.d(TAG,"now At " + i );
-               reading = mCursor.getDouble(3);
-               day = mCursor.getString(1);
-            arrayMap = new ArrayMap<String, Double>();
+            reading = mCursor.getDouble(3);
+            day = mCursor.getString(1);
+            values.put(day,reading);
+            arrayMap = new ArrayMap<String, Double>(); //stupid
             arrayMap.put(day, reading);
                Log.d(TAG," got  " + reading + " for  " + day);
-
                double dayReading = arrayMap.get(day);
                Log.d(TAG, " reading: " + dayReading + " for: " + arrayMap.keyAt(i));
-
         }
+
+        getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI,values);
         Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show();
 
 

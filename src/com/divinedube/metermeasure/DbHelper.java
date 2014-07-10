@@ -23,8 +23,8 @@ public class DbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = String.format
-             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s integer)",
+        String sqlReadings = String.format
+             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer)",
 
                 MeterReadingsContract.TABLE,
                 MeterReadingsContract.Column.ID,
@@ -32,11 +32,25 @@ public class DbHelper extends SQLiteOpenHelper {
                 MeterReadingsContract.Column.TIME,
                 MeterReadingsContract.Column.READING,
                 MeterReadingsContract.Column.NOTE,
-                MeterReadingsContract.Column.CREATED_AT,
-                MeterReadingsContract.Column.DAY_DIFF);
+                MeterReadingsContract.Column.CREATED_AT
+                );
 
-       Log.d(TAG, "creating the db with this " + sql + " command in the onCreate method");
-        db.execSQL(sql);
+       Log.d(TAG, "creating the meter readings db with this " + sqlReadings + " command in the onCreate method(**MAIN_DB**)");
+        String sqlStates = String.format //:::
+                ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s integer, %s integer)",
+                      MeterReadingStatsContract.TABLE,
+                      MeterReadingStatsContract.Column.ID,
+                      MeterReadingStatsContract.Column.NAME_FOR_DAY_1,
+                      MeterReadingStatsContract.Column.NAME_FOR_DAY_2,
+                      MeterReadingStatsContract.Column.READING_FOR_DAY_1,
+                      MeterReadingStatsContract.Column.READING_FOR_DAY_2,
+                      MeterReadingStatsContract.Column.DIFFERENCE
+              );
+
+        Log.d(TAG, "creating the meter readings db with this " + sqlStates + " command in the onCreate method(**STATS_DB**)");
+
+        db.execSQL(sqlReadings);
+        db.execSQL(sqlStates);
     }
 
     /**

@@ -23,6 +23,8 @@ public class MeterRecordingsProvider extends ContentProvider {
     static {
         sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingsContract.TABLE, MeterReadingsContract.METER_DIR);
         sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingsContract.TABLE + "/#", MeterReadingsContract.METER_TYPE);
+        sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingStatsContract.TABLE, MeterReadingsContract.METER_DIR);
+        sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingStatsContract.TABLE + "/#", MeterReadingsContract.METER_TYPE);
     }
 
     /**
@@ -189,7 +191,8 @@ public class MeterRecordingsProvider extends ContentProvider {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-       long rowId =  db.insertWithOnConflict(MeterReadingsContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+       long rowId;
+         rowId = db.insertWithOnConflict(MeterReadingsContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
         if (rowId != -1){
             long id = rowId;
@@ -280,7 +283,7 @@ public class MeterRecordingsProvider extends ContentProvider {
             case MeterReadingsContract.METER_DIR:
                 where = selection;
                 break;
-            case MeterReadingsContract.METER_TYPE: //this one i when they have given a Uri with id
+            case MeterReadingsContract.METER_TYPE: //this one i when they have given a Uri with a id
                 long id = ContentUris.parseId(uri);
                 where = MeterReadingsContract.Column.ID + "=" + "id" + (TextUtils.isEmpty(selection) ? "" : " and( " + selection + " )");
                 break;

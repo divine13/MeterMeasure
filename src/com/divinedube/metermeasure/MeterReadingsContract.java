@@ -35,6 +35,5 @@ public class MeterReadingsContract {
         public static final String TIME = "time";
         public static final String READING = "reading";
         public static final String NOTE = "note";
-        public static final String DAY_DIFF = "day_diff";
     }
 }
