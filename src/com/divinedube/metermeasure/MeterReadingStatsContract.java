@@ -11,7 +11,8 @@ import android.provider.BaseColumns;
 public class MeterReadingStatsContract {
 
     public static final String TABLE = "meter_stats";
-    public static final Uri STATES_CONTENT_URI = Uri.parse("content://" + MeterReadingsContract.AUTHORITY + "/" + TABLE);
+    public static final String STATS_AUTHORITY = "com.divinedube.metermeasure.MeterReadingStatsProvider";
+    public static final Uri STATES_CONTENT_URI = Uri.parse("content://" + STATS_AUTHORITY + "/" + TABLE);
 
 
     public class Column{

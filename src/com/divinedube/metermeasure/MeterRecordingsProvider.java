@@ -15,7 +15,7 @@ import android.util.Log;
  * Created by Divine Dube on 2014/06/30.
  */
 public class MeterRecordingsProvider extends ContentProvider {
-    private static final String TAG = MeterReadingsContract.class.getSimpleName();
+    private static final String TAG = MeterRecordingsProvider.class.getSimpleName();
 
     private DbHelper dbHelper;
     private static UriMatcher sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
@@ -23,8 +23,6 @@ public class MeterRecordingsProvider extends ContentProvider {
     static {
         sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingsContract.TABLE, MeterReadingsContract.METER_DIR);
         sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingsContract.TABLE + "/#", MeterReadingsContract.METER_TYPE);
-        sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingStatsContract.TABLE, MeterReadingsContract.METER_DIR);
-        sUriMatcher.addURI(MeterReadingsContract.AUTHORITY, MeterReadingStatsContract.TABLE + "/#", MeterReadingsContract.METER_TYPE);
     }
 
     /**
@@ -191,8 +189,7 @@ public class MeterRecordingsProvider extends ContentProvider {
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-       long rowId;
-         rowId = db.insertWithOnConflict(MeterReadingsContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        long rowId  = db.insertWithOnConflict(MeterReadingsContract.TABLE, null, values, SQLiteDatabase.CONFLICT_IGNORE);
 
         if (rowId != -1){
             long id = rowId;
@@ -285,7 +282,7 @@ public class MeterRecordingsProvider extends ContentProvider {
                 break;
             case MeterReadingsContract.METER_TYPE: //this one i when they have given a Uri with a id
                 long id = ContentUris.parseId(uri);
-                where = MeterReadingsContract.Column.ID + "=" + "id" + (TextUtils.isEmpty(selection) ? "" : " and( " + selection + " )");
+                where = MeterReadingsContract.Column.ID + " = " + id  + (TextUtils.isEmpty(selection) ? "" : " and( " + selection + " )");
                 break;
             default:
                 throw new IllegalArgumentException("Illegal uri: " + uri);
