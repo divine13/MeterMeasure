@@ -137,4 +137,5 @@ public class MeterReadingStatsProvider extends ContentProvider{
         Log.d(TAG, "***EXECUTED*** update and returned the **UPDATED** rows of " + rowId);
         return rowId;
       }
+
 }

@@ -38,8 +38,8 @@ public class MeterReadingsDiff extends FragmentActivity {
 
 
     @Override
-    public void onCreate(Bundle saveInstance){
-        super.onCreate(saveInstance);
+    public void onCreate(Bundle savedInstance){
+        super.onCreate(savedInstance);
         MeterUtils tool = new MeterUtils();
         currentTime = tool.getCurrentTime();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -62,6 +62,9 @@ public class MeterReadingsDiff extends FragmentActivity {
                        MeterReadingsContract.NORMAL_SORT_ORDER
                );
 
+
+        //Todo fix the STATES_* to STATS_*
+        Cursor cursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
         int noC = mCursor.getCount();
         ContentValues values = new ContentValues();
         while (mCursor.moveToNext()){
@@ -69,36 +72,36 @@ public class MeterReadingsDiff extends FragmentActivity {
             Log.d(TAG,"now At " + i );
             reading = mCursor.getDouble(3);
 
-//            day = mCursor.getString(1);
+            day = mCursor.getString(1);
 //            double reading2 = 0;
 //            String day2 ="";
 //            if (mCursor.moveToNext()){
 //                reading2 = mCursor.getDouble(3);
 //                day2 = mCursor.getString(1);
 //            }
+            values.put(MeterReadingStatsContract.Column.ID, i);
             values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_1,reading);
 //            values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_2, reading2);
             values.put(MeterReadingStatsContract.Column.NAME_FOR_DAY_1, day);
+
 //            values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_2, day2);
 
                Log.d(TAG," got  " + reading + " for  " + day);
 //            Log.d(TAG," got  " + reading2 + " for  " + day2);
+
+            if(values.size() == 0){
+                Toast.makeText(this,"please record your meter reading first before checking your meter stats", Toast.LENGTH_LONG);
+                finish();
+            }else {
+                getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI, values);
+                Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
+            }
+//            else{
+//                getContentResolver().update(MeterReadingStatsContract.STATES_CONTENT_URI,values, null, null);
+//                Log.d(TAG, "in Else");
+//            }
         }
-
-        if (values.size() > 0 && !(getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null).moveToFirst()) ) {
-            getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI, values);
-            Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
-        }else{
-            getContentResolver().update(MeterReadingStatsContract.STATES_CONTENT_URI,values, null, null);
-            Log.d(TAG, "in Else");
-        }
-
-        //Todo fix the STATES_* to STATS_*
-        Cursor cursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
-
-
     }
-
-
+    
 }
 

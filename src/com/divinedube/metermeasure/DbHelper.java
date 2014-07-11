@@ -37,7 +37,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
        Log.d(TAG, "creating the meter readings db with this " + sqlReadings + " command in the onCreate method(**MAIN_DB**)");
         String sqlStates = String.format //:::
-                ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s integer, %s integer, unique(%s,%s,%s,%s))",
+                ("create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer, unique(%s,%s,%s,%s))",
                       MeterReadingStatsContract.TABLE,
                       MeterReadingStatsContract.Column.ID,
                       MeterReadingStatsContract.Column.NAME_FOR_DAY_1,
