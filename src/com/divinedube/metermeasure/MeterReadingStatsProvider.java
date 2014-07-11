@@ -70,7 +70,7 @@ public class MeterReadingStatsProvider extends ContentProvider{
         }
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        rowId = db.insertWithOnConflict(MeterReadingStatsContract.TABLE,null,contentValues, SQLiteDatabase.CONFLICT_REPLACE);
+        rowId = db.insertWithOnConflict(MeterReadingStatsContract.TABLE,null,contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
         if (rowId != -1){
             long id = rowId;
