@@ -66,7 +66,7 @@ public class MeterReadingStatsProvider extends ContentProvider{
         Log.d(TAG, "INSERTING STATS IN DB: meter_states");
 
         if(sUriMatcher.match(uri) != MeterReadingsContract.METER_DIR) {
-            throw new IllegalArgumentException("illegal uri " + uri);
+            throw new IllegalArgumentException("illegal uri specified  " + uri);
         }
 
         SQLiteDatabase db = dbHelper.getWritableDatabase();

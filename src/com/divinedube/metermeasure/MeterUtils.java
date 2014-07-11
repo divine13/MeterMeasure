@@ -9,6 +9,7 @@ public class MeterUtils {
 Calendar calendar = Calendar.getInstance();
     private int hour;
     private int minute;
+    private int dayOfWeek;
 
     public String getCurrentTime(){
         hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -22,5 +23,10 @@ Calendar calendar = Calendar.getInstance();
 
     public int getCurrentMinute(){
         return minute;
+    }
+
+    public  int getDayOfWeek(){
+        dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        return dayOfWeek;
     }
 }

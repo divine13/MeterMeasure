@@ -47,6 +47,8 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
     ContentValues values;
     SQLiteDatabase db;
     Spinner spinner;
+    MeterUtils util = new MeterUtils();
+
 
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
@@ -73,8 +75,12 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         ArrayAdapter<CharSequence> spinnerAdapter =
                 ArrayAdapter.createFromResource(this,R.array.week_days_array,android.R.layout.simple_spinner_item);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
         spinner.setAdapter(spinnerAdapter); //i would like this to display the default day which is today
         spinner.setOnItemSelectedListener(this);
+        AdapterView<?> parent = spinner;
+
+        parent.setSelection(util.getDayOfWeek() -1);
     }
     /**
      * <p>Callback method to be invoked when an item in this view has been
@@ -92,12 +98,16 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
      */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
         //get the item
         //make sure its a string
         //add it to day
+
+
         Log.d(TAG, "int the method of the onItemSelected ");
          selectedItem =  parent.getItemAtPosition(position).toString();
         Toast.makeText(this,"You Selected " + selectedItem , Toast.LENGTH_LONG).show();
+        return;
     }
 
     public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{

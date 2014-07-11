@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.TextUtils;
-import android.util.ArrayMap;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -88,7 +87,9 @@ public class MeterReadingsDiff extends FragmentActivity {
             Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
         }
 
-
+       // getContentResolver().query();
     }
+
+
 }
 
