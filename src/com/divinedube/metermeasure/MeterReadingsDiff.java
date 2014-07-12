@@ -63,32 +63,19 @@ public class MeterReadingsDiff extends FragmentActivity {
                );
 
 
-        //Todo fix the STATES_* to STATS_*
-        Cursor cursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
+
         int noC = mCursor.getCount();
         ContentValues values = new ContentValues();
+
         while (mCursor.moveToNext()){
             int i = mCursor.getPosition();
             Log.d(TAG,"now At " + i );
             reading = mCursor.getDouble(3);
-
             day = mCursor.getString(1);
-//            double reading2 = 0;
-//            String day2 ="";
-//            if (mCursor.moveToNext()){
-//                reading2 = mCursor.getDouble(3);
-//                day2 = mCursor.getString(1);
-//            }
             values.put(MeterReadingStatsContract.Column.ID, i);
             values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_1,reading);
-//            values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_2, reading2);
             values.put(MeterReadingStatsContract.Column.NAME_FOR_DAY_1, day);
-
-//            values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_2, day2);
-
                Log.d(TAG," got  " + reading + " for  " + day);
-//            Log.d(TAG," got  " + reading2 + " for  " + day2);
-
             if(values.size() == 0){
                 Toast.makeText(this,"please record your meter reading first before checking your meter stats", Toast.LENGTH_LONG);
                 finish();
@@ -96,12 +83,30 @@ public class MeterReadingsDiff extends FragmentActivity {
                 getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI, values);
                 Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
             }
-//            else{
-//                getContentResolver().update(MeterReadingStatsContract.STATES_CONTENT_URI,values, null, null);
-//                Log.d(TAG, "in Else");
-//            }
         }
+
+        Cursor statsCursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
+        Cursor statsCursorsSecond = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
+
+        int fff= statsCursor.getCount();
+        Log.d(TAG, "meter stats has " + fff + " rows");
+        for (int i =0;i < fff; i++){
+            double val2;
+            if (statsCursorsSecond.moveToPosition(i + 1)){
+               val2 = statsCursorsSecond.getDouble(3);
+                Log.d(TAG, "the second row value is ");
+            }else{
+                 val2 = 0;
+            }
+            statsCursor.moveToNext();
+           double val = statsCursor.getDouble(3);
+            if (statsCursorsSecond.isAfterLast()) break;
+            val -= val2;
+            Log.d(TAG, "the diff is: " + val);
+        }
+
+
     }
-    
+
 }
 
