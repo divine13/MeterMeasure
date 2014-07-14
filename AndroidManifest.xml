@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="11"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="20" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +22,11 @@
             android:name="com.divinedube.metermeasure.MeterReadingStatsProvider"
             android:exported="false"
             />
+        <provider
+            android:authorities="com.divinedube.metermeasure.ProcessedDataProvider"
+            android:name="com.divinedube.metermeasure.ProcessedDataProvider"
+            android:exported="false"/>
+
         <activity
             android:name="com.divinedube.metermeasure.MainActivity"
             android:label="@string/app_name" >
@@ -38,16 +43,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.divinedube.metermeasure.MainActivity"/>
             </activity>
-        <activity android:name=".AboutActivity" android:label="@string/about_label"
-            android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.divinedube.metermeasure.MainActivity"/>
-            </activity>
         <activity android:name=".SettingsActivity" android:label="@string/action_settings" android:parentActivityName=".MainActivity">
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.divinedube.metermeasure.MainActivity"/>
         </activity>
-        <activity android:name=".MeterReadingsDiff"/>
+        <activity android:name=".MeterReadingsDiff" />
+        <activity android:name=".MeterDbAsGson" />
+
     </application>
 
 </manifest>

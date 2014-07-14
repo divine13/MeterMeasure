@@ -16,6 +16,8 @@
     <orderEntry type="jdk" jdkName="Android API 20, L preview Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="android-support-v4" level="application" />
+    <orderEntry type="library" name="src" level="application" />
+    <orderEntry type="library" name="gson-2.2.4" level="application" />
   </component>
 </module>
 

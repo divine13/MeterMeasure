@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:scrollbarStyle="insideOverlay"
+    >
 
     <TextView
         android:id="@+id/for_diff_day_one"
@@ -9,7 +15,41 @@
         android:layout_height="wrap_content"
         android:text="@string/and_string"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_centerHorizontal="true"
+       />
+
+
+    <TextView
+        android:id="@+id/close_bracket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/for_diff_day_one"
+        android:text="@string/close_bracket"
+        android:paddingRight="4dp"/>
+
+    <TextView
+        android:id="@+id/list_item_val0"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/close_bracket"
+        android:text="@string/val"
+        />
+
+    <TextView
+        android:id="@+id/open0_bracket"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/list_item_val0"
+        android:text="@string/open_bracket"
+
+        />
+    <TextView
+        android:id="@+id/list_item_day_one"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/day_one"
+        android:layout_above="@+id/list_item_reading"
+        android:layout_toLeftOf="@+id/open0_bracket" />
 
     <TextView
         android:id="@+id/list_item_day_two"
@@ -18,14 +58,32 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/for_diff_day_one"
         android:text="@string/day_two"/>
-
+        />
     <TextView
-        android:id="@+id/list_item_day_one"
-        android:paddingRight="4dp"
+        android:id="@+id/open_bracket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/for_diff_day_one"
-        android:text="@string/day_one"/>
+        android:layout_toRightOf="@+id/list_item_day_two"
+        android:text="@string/open_bracket"
+
+       />
+
+    <TextView
+        android:id="@+id/list_item_val"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/open_bracket"
+        android:text="@string/val"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/list_item_val"
+        android:text="@string/close_bracket"
+
+        />
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,7 +92,7 @@
         android:textStyle="bold"
         android:text="@string/reading"
         android:textSize="18sp"
-        />
+        android:id="@+id/list_item_reading" />
 
 
 

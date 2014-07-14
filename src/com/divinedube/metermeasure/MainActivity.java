@@ -1,6 +1,8 @@
 package com.divinedube.metermeasure;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -32,7 +34,7 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, NewMeterReadingsActivity.class));
                 return true;
             case R.id.action_about:
-                startActivity(new Intent(this,AboutActivity.class));
+                showAboutDialog();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
@@ -43,6 +45,22 @@ public class MainActivity extends Activity {
             default:
                 return false;
         }
+    }
+
+    public void showAboutDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(R.string.about).setTitle(R.string.about_label)
+                .setIcon(android.R.drawable.ic_dialog_info);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 }

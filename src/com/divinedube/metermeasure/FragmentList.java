@@ -59,7 +59,7 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
      */
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        if (id != id) return null;
+        if (id != LOADER_ID) return null;
         Log.d(TAG, "onCreate Loader");
 
         return new CursorLoader(

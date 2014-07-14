@@ -35,7 +35,7 @@ public class DbHelper extends SQLiteOpenHelper {
                 MeterReadingsContract.Column.CREATED_AT
                 );
 
-       Log.d(TAG, "creating the meter readings db with this " + sqlReadings + " command in the onCreate method(**MAIN_DB**)");
+        Log.d(TAG,"creating the meter readings db with this " + sqlReadings + " command in the onCreate method(**MAIN_DB**)");
         String sqlStates = String.format //:::
                 ("create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer, unique(%s,%s,%s,%s))",
                       MeterReadingStatsContract.TABLE,
@@ -45,7 +45,7 @@ public class DbHelper extends SQLiteOpenHelper {
                       MeterReadingStatsContract.Column.READING_FOR_DAY_1,
                       MeterReadingStatsContract.Column.READING_FOR_DAY_2,
                       MeterReadingStatsContract.Column.DIFFERENCE,
-                        //**MUST BE UNIQUE COLUMNS**//
+                        //**MUST BE UNIQUE COLUMNS**// TOdo strap this *make it clean rm useless columns *
                       MeterReadingStatsContract.Column.NAME_FOR_DAY_1,
                       MeterReadingStatsContract.Column.NAME_FOR_DAY_2,
                       MeterReadingStatsContract.Column.READING_FOR_DAY_1,
@@ -53,10 +53,22 @@ public class DbHelper extends SQLiteOpenHelper {
 
               );
 
+        String processedData = String.format(                               //goodies   //goodies
+                "create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer)",
+                    ProcessedDataContract.TABLE,
+                    ProcessedDataContract.Column.ID,
+                    ProcessedDataContract.Column.DAY_1,
+                    ProcessedDataContract.Column.DAY_2,
+                    ProcessedDataContract.Column.READING_FOR_DAY_1,
+                    ProcessedDataContract.Column.READING_FOR_DAY_2,
+                    ProcessedDataContract.Column.DIFFERENCE
+                );
+
         Log.d(TAG, "creating the meter readings db with this " + sqlStates + " command in the onCreate method(**STATS_DB**)");
 
         db.execSQL(sqlReadings);
         db.execSQL(sqlStates);
+        db.execSQL(processedData);
     }
 
     /**
