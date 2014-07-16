@@ -49,7 +49,6 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
     Spinner spinner;
     MeterUtils util = new MeterUtils();
 
-
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_new);
@@ -82,27 +81,13 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
 
         parent.setSelection(util.getDayOfWeek() -1);
     }
-    /**
-     * <p>Callback method to be invoked when an item in this view has been
-     * selected. This callback is invoked only when the newly selected
-     * position is different from the previously selected position or if
-     * there was no selected item.</p>
-     * <p/>
-     * Implementers can call getItemAtPosition(position) if they need to access the
-     * data associated with the selected item.
-     *
-     * @param parent   The AdapterView where the selection happened
-     * @param view     The view within the AdapterView that was clicked
-     * @param position The position of the view in the adapter
-     * @param id       The row id of the item that is selected
-     */
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
         //get the item
         //make sure its a string
         //add it to day
-
 
         Log.d(TAG, "int the method of the onItemSelected ");
          selectedItem =  parent.getItemAtPosition(position).toString();
@@ -168,8 +153,8 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
             values.put(MeterReadingsContract.Column.READING, reading);
             values.put(MeterReadingsContract.Column.NOTE, note);
             values.put(MeterReadingsContract.Column.CREATED_AT, System.currentTimeMillis());
-            //todo there must be a column for differences in readings
 
+            // todo this must be done in the service create method with params = (uri, values)
              getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
 
                 Log.d(TAG, "inserting "  + time + reading + note + " into db " +

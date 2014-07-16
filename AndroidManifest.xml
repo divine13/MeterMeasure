@@ -48,7 +48,8 @@
                 android:value="com.divinedube.metermeasure.MainActivity"/>
         </activity>
         <activity android:name=".MeterReadingsDiff" />
-        <activity android:name=".MeterDbAsGson" />
+        <service android:name=".PullAndPushService" />
+        <activity android:name="com.divinedube.http.MeterMeasureClient"/>
 
     </application>
 
