@@ -8,21 +8,21 @@ import com.google.gson.GsonBuilder;
  */
 class TestClass {
     public static void main(String[] args) {
-        BagOfValuesArray bg = new BagOfValuesArray();
-        Gson gson  = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-        bg.putValuesPairs("id1", 1);
-        bg.putValuesPairs("time1", "17:00");
-        bg.putValuesPairs("reading1", 56);
-        bg.putValuesPairs("note1", "hello there boy");
-        bg.putValuesPairs("id", 2);
-        bg.putValuesPairs("time", "18:00");
-        bg.putValuesPairs("reading", 576);
-        bg.putValuesPairs("note", "hello there girl");
+//        BagOfValuesArray bg = new BagOfValuesArray();
+//        Gson gson  = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+//        bg.putValuesPairs("id1", 1);
+//        bg.putValuesPairs("time1", "17:00");
+//        bg.putValuesPairs("reading1", 56);
+//        bg.putValuesPairs("note1", "hello there boy");
+//        bg.putValuesPairs("id", 2);
+//        bg.putValuesPairs("time", "18:00");
+//        bg.putValuesPairs("reading", 576);
+//        bg.putValuesPairs("note", "hello there girl");
+//
+//        bg.addValuePairs();
 
-        bg.addValuePairs();
 
-
-        System.out.print( gson.toJsonTree(bg, BagOfValuesArray.class).toString());
+       // System.out.print( gson.toJsonTree(bg, BagOfValuesArray.class).toString());
     }
 
 }
