@@ -17,6 +17,7 @@
     <string name="open_bracket">(</string>
     <string name="close_bracket">)</string>
     <string name="val">100</string>
+    <string name="update_data">Update Readings</string>
 
     <string name="day">Day</string>
     <string name="time">Time</string>
