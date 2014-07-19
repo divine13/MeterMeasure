@@ -23,7 +23,6 @@ import android.widget.Toast;
  * Created by Divine Dube on 2014/07/04.
  */
 
-//Todo Strap this class
 public class MeterReadingsDiff extends ListActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     SharedPreferences prefs;
