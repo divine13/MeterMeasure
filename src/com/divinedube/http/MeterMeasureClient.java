@@ -1,25 +1,24 @@
 package com.divinedube.http;
 
-import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.divinedube.metermeasure.BagOfValuesArray;
 import com.divinedube.metermeasure.MeterReadingsContract;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.savagelook.android.UrlJsonAsyncTask;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HTTP;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -33,7 +32,7 @@ public class MeterMeasureClient extends IntentService{
 
     BagOfValuesArray bva = new BagOfValuesArray();
     Gson json = new GsonBuilder().serializeNulls().create();
-
+    String jsonOfDb;
     public MeterMeasureClient() {
         super(TAG);
     }
@@ -60,11 +59,13 @@ public class MeterMeasureClient extends IntentService{
             bva.putArr();
         }
 
-        String jsonOfDb = json.toJson(bva);
+        jsonOfDb = json.toJson(bva);
         Log.d(TAG, jsonOfDb);
 
+
+
         DefaultHttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost("http://192.168.56.1/meters");
+        HttpPost post = new HttpPost("http://192.168.56.1/meters.json");
         try {
             Log.d(TAG, "Trying to push data to the server");
             StringEntity stringEntity = new StringEntity(jsonOfDb);
@@ -83,6 +84,18 @@ public class MeterMeasureClient extends IntentService{
             ese.printStackTrace();
         }catch (IOException ioe){
             ioe.printStackTrace();
+        }
+    }
+
+    private class PullOrPushReadings extends UrlJsonAsyncTask {
+
+        public PullOrPushReadings(Context context) {
+            super(context);
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... urls) {
+            return super.doInBackground(urls);
         }
     }
 }

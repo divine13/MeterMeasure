@@ -18,6 +18,7 @@
     <orderEntry type="library" name="android-support-v4" level="application" />
     <orderEntry type="library" name="src" level="application" />
     <orderEntry type="library" name="gson-2.2.4" level="application" />
+    <orderEntry type="library" name="com.savagelook" level="application" />
   </component>
 </module>
 
