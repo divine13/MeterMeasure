@@ -71,7 +71,11 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
         MeterUtils tool = new MeterUtils();
         currentTime = tool.getCurrentTime();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Cursor statsCursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
+        Cursor pCursor = getContentResolver().query(ProcessedDataContract.P_DATA_CONTENT_URI,null,null,null,null);
 
+        int fff= statsCursor.getCount(); //todo fix bad variable
+        int numRowsPD = pCursor.getCount();
         defaultTime = prefs.getString("time", currentTime);
         if (defaultTime.equals(currentTime) || TextUtils.isEmpty(defaultTime)){
            Toast.makeText(this,"please set the default time that you always check your meter reading  ",
@@ -82,7 +86,8 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
                     Toast.LENGTH_LONG).show();
         }
         String[] selectionArgs = {defaultTime};
-       mCursor = getContentResolver().query //TODO This should be done using a Loader leave it for now
+
+       mCursor = getContentResolver().query //TODO This should be done using a Loader leave it for now and below below
                (
                        MeterReadingsContract.CONTENT_URI, null,
                        MeterReadingsContract.THE_DIFF_SELECTION_STATEMENT,
@@ -91,68 +96,73 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
                );
 
 
-
         int noC = mCursor.getCount();
         ContentValues values = new ContentValues();
-
-        while (mCursor.moveToNext()){
-            int i = mCursor.getPosition();
-            Log.d(TAG,"now At " + i );
-            reading = mCursor.getDouble(3);
-            day = mCursor.getString(1);
-            values.put(MeterReadingStatsContract.Column.ID, i);
-            values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_1,reading);
-            values.put(MeterReadingStatsContract.Column.NAME_FOR_DAY_1, day);
-               Log.d(TAG," got  " + reading + " for  " + day);
-            if(values.size() == 0){
-                Toast.makeText(this,"please record your meter reading first before checking your meter stats", Toast.LENGTH_LONG);
-                finish();
-            }else {
-                getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI, values);
-                Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
+        if (fff != numRowsPD) {
+            while (mCursor.moveToNext()) {
+                int i = mCursor.getPosition();
+                Log.d(TAG, "now At " + i);
+                reading = mCursor.getDouble(3);
+                day = mCursor.getString(1);
+                values.put(MeterReadingStatsContract.Column.ID, i);
+                values.put(MeterReadingStatsContract.Column.READING_FOR_DAY_1, reading);
+                values.put(MeterReadingStatsContract.Column.NAME_FOR_DAY_1, day);
+                Log.d(TAG, " got  " + reading + " for  " + day);
+                if (values.size() == 0) {
+                    Toast.makeText(this, "please record your meter reading first before checking your meter stats", Toast.LENGTH_LONG);
+                    finish();
+                } else {
+                    getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI, values);
+                    Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
+                }
             }
-        }
 
-        Cursor statsCursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
-        Cursor statsCursorsSecond = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
+            Cursor statsCursorsSecond = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI, null, null, null, null);
 
-        int fff= statsCursor.getCount(); //todo fix bad variable
-        Log.d(TAG, "meter stats has " + fff + " rows");
-        for (int i =0;i < fff; i++){  //to subtract the values in the meter_stats
-            int pos = statsCursor.getPosition() + 1;
-            double val2;
-            String day2;
-            if (statsCursorsSecond.moveToPosition(i + 1)){
-               val2 = statsCursorsSecond.getDouble(3);
-                day2 =  statsCursorsSecond.getString(1);
-               Log.d(TAG, "the second row value is " + val2 + " on " + day2);
-            }else{
-                 val2 = 0;
-                 day2 =  "";
+
+            Log.d(TAG, "meter stats has " + fff + " rows");
+            for (int i = 0; i < fff; i++) {  //to subtract the values in the meter_stats
+                int pos = statsCursor.getPosition() + 1;
+                double val2;
+                String day2;
+                if (statsCursorsSecond.moveToPosition(i + 1)) {
+                    val2 = statsCursorsSecond.getDouble(3);
+                    day2 = statsCursorsSecond.getString(1);
+                    Log.d(TAG, "the second row value is " + val2 + " on " + day2);
+                } else {
+                    val2 = 0;
+                    day2 = "";
+                }
+                statsCursor.moveToNext();
+                double val = statsCursor.getDouble(3);
+                String day = statsCursor.getString(1);
+                if (statsCursorsSecond.isAfterLast()) break; //clean data starts here
+
+                ContentValues processedValues = new ContentValues();
+                processedValues.put(ProcessedDataContract.Column.ID, pos);
+                processedValues.put(ProcessedDataContract.Column.DAY_1, day);
+                processedValues.put(ProcessedDataContract.Column.DAY_2, day2);
+                processedValues.put(ProcessedDataContract.Column.READING_FOR_DAY_1, val); //bad
+                processedValues.put(ProcessedDataContract.Column.READING_FOR_DAY_2, val2);
+                val -= val2; //bad
+                processedValues.put(ProcessedDataContract.Column.DIFFERENCE, val); //bad
+                Uri uri = getContentResolver().insert(ProcessedDataContract.P_DATA_CONTENT_URI, processedValues);
+                Log.d(TAG, "the diff is: " + val + " of " + day + " and " + day2);
+                Log.d(TAG, "the uri for the inserted data is " + uri);
             }
-            statsCursor.moveToNext();
-            double val = statsCursor.getDouble(3);
-            String day = statsCursor.getString(1);
-            if (statsCursorsSecond.isAfterLast()) break; //clean data starts here
 
-            ContentValues processedValues = new ContentValues();
-            processedValues.put(ProcessedDataContract.Column.ID, pos );
-            processedValues.put(ProcessedDataContract.Column.DAY_1, day);
-            processedValues.put(ProcessedDataContract.Column.DAY_2, day2);
-            processedValues.put(ProcessedDataContract.Column.READING_FOR_DAY_1, val); //bad
-            processedValues.put(ProcessedDataContract.Column.READING_FOR_DAY_2,val2);
-            val -= val2; //bad
-            processedValues.put(ProcessedDataContract.Column.DIFFERENCE, val ); //bad
-          Uri uri = getContentResolver().insert(ProcessedDataContract.P_DATA_CONTENT_URI, processedValues);
-            Log.d(TAG, "the diff is: " + val + " of " + day + " and "+ day2);
-            Log.d(TAG, "the uri for the inserted data is " + uri);
+
+            mAdapter = new SimpleCursorAdapter(this, R.layout.list_item_meter_reading_diff, null, FROM, TO, 0);
+            setListAdapter(mAdapter);
+
+            getLoaderManager().initLoader(LOADER_ID, null, this);
+        }else{
+            //just load the data
+            mAdapter = new SimpleCursorAdapter(this, R.layout.list_item_meter_reading_diff, null, FROM, TO, 0);
+            setListAdapter(mAdapter);
+
+            getLoaderManager().initLoader(LOADER_ID, null, this);
         }
-
-
-            mAdapter = new SimpleCursorAdapter(this,R.layout.list_item_meter_reading_diff,null,FROM,TO,0);
-        setListAdapter(mAdapter);
-
-        getLoaderManager().initLoader(LOADER_ID,null,this);
     }
 
     @Override

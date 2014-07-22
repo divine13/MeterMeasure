@@ -13,6 +13,8 @@ import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -95,6 +97,11 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         return;
     }
 
+    public void saveData(MenuItem item) {
+        save();
+    }
+
+    //todo fix this make this static
     public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener{
 
         public Dialog onCreateDialog(Bundle savedInstance){
@@ -137,6 +144,10 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
     }
 
     public void saveData(View view){ //I will run this on its thread some time later for now lets get the basics down
+       save();
+    }
+
+    private void save(){
         try {
             day =  mEditTextDay.getText().toString() + " " + selectedItem;
             time = mEditTextTime.getText().toString();
@@ -146,8 +157,8 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
             DbHelper dbHelper = new DbHelper(this);
             db = dbHelper.getWritableDatabase();
 
-             values = new ContentValues();
-           // values.put(MeterReadingsContract.Column.ID, newRowId);
+            values = new ContentValues();
+            // values.put(MeterReadingsContract.Column.ID, newRowId);
             values.put(MeterReadingsContract.Column.DAY, day);
             values.put(MeterReadingsContract.Column.TIME, time);
             values.put(MeterReadingsContract.Column.READING, reading);
@@ -155,10 +166,10 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
             values.put(MeterReadingsContract.Column.CREATED_AT, System.currentTimeMillis());
 
             // todo this must be done in the service create method with params = (uri, values)
-             getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
+            getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
 
-                Log.d(TAG, "inserting "  + time + reading + note + " into db " +
-                        MeterReadingsContract.TABLE + " at "+System.currentTimeMillis());
+            Log.d(TAG, "inserting "  + time + reading + note + " into db " +
+                    MeterReadingsContract.TABLE + " at "+System.currentTimeMillis());
             //newRowId = db.insert(MeterReadingsContract.TABLE, null, values);
             Toast.makeText(this, "Your Meter Readings have been saved", Toast.LENGTH_LONG).show();
             finish();
@@ -167,17 +178,24 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
             Toast.makeText(this, "Eish!.Could not save Meter Readings", Toast.LENGTH_LONG).show();
         }
     }
-    /**
-     * Callback method to be invoked when the selection disappears from this
-     * view. The selection can disappear for instance when touch is activated
-     * or when the adapter becomes empty.
-     *
-     * @param parent The AdapterView that now contains no selected item.
-     */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
             Log.d(TAG, "onNothingSelected was called");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_new, menu);
+        return true;
+    }
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.action_save:
+//
+//            default:
+//                return false;
+//        }
+//    }
 }

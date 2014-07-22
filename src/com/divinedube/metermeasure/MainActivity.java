@@ -2,17 +2,18 @@ package com.divinedube.metermeasure;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.divinedube.http.MeterMeasureClient;
-
 
 public class MainActivity extends Activity {
 
@@ -47,10 +48,11 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, MeterReadingsDiff.class));
                 return true;
             case R.id.action_sync_data:
-                if(isConnected())
-                startService(new Intent(this, MeterMeasureClient.class));  //probably bad style and code too
-                else
-                    Toast.makeText(this,"please connect to the Internet to update readings", Toast.LENGTH_LONG).show();
+                if(isConnected()) {
+                    startService(new Intent(this, MeterMeasureClient.class));  //probably bad style and code too
+                }else {
+                    Toast.makeText(this, "please connect to the Internet to update readings", Toast.LENGTH_LONG).show();
+                }
             default:
                 return false;
         }
@@ -59,7 +61,7 @@ public class MainActivity extends Activity {
     public void showAboutDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        builder.setMessage(R.string.about).setTitle(R.string.about_label)
+        builder.setMessage(R.string.about).setTitle(R.string.motivation)
                 .setIcon(android.R.drawable.ic_dialog_info);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
@@ -82,5 +84,4 @@ public class MainActivity extends Activity {
             return false;
         }
     }
-
 }

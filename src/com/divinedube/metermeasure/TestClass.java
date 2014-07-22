@@ -1,7 +1,12 @@
 package com.divinedube.metermeasure;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import android.text.format.DateUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  * Created by Divine Dube on 2014/07/15.
@@ -23,6 +28,12 @@ class TestClass {
 
 
        // System.out.print( gson.toJsonTree(bg, BagOfValuesArray.class).toString());
+
+//       DateFormat s =  DateFormat.getDateInstance();
+//        DateFormat r = DateFormat.getDateTimeInstance();
+//
+//        System.out.print( s.format(new Date(1405226400716l)));
+//        System.out.print(r.format(new Date(1405226400716l)));
     }
 
 }

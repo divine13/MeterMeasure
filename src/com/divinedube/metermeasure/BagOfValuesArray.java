@@ -28,14 +28,14 @@ public class BagOfValuesArray {
     private ArrayList<Object> meter = new ArrayList<Object>();
     private transient HashMap<String, Object> rt = new HashMap<String, Object>();
 
-    public HashMap setMap(int id, String day, String time, double reading, String note, long createdAt){
+    public HashMap setMap(int id, String day, String time, double reading, String note, String createdAt){
         HashMap<String, Object> obj = new HashMap<String, Object>();
         obj.put("id", id);
         obj.put("day", day);
         obj.put("time",time);
         obj.put("reading", reading);
         obj.put("note", note);
-        obj.put("created_at", createdAt);
+        obj.put("made_at", createdAt);
         rt = obj;
         return rt;
     }

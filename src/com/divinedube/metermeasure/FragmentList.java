@@ -41,9 +41,6 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
         super.onActivityCreated(savedInstance);
         setEmptyText("Searching for Saved Meter Readings...");
 
-        DbHelper dbHelper = new DbHelper(getActivity());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item, null, FROM, TO, 0);
         setListAdapter(mAdapter);
 

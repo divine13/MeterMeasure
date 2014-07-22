@@ -6,8 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="new_meter_readings_label">Add New Meter Readings</string>
     <string name="about_label">About</string>
-    <string name="about">This app helps you manage and save even more on your meter electricity bill.</string>
-    <string name="app_version">App Version: v0.0.1 beta</string>
+    <string name="about">This app helps you manage and save even more on your prepaid electricity</string>
+    <string name="motivation">Didi motivated worX</string>
     <string name="time_summary">Just tell us the time at which you always check the meter reading </string>
     <string name="check_time">Check Time</string>
     <string name="show_your_meter_stats">Stats</string>
