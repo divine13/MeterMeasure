@@ -36,6 +36,7 @@ public class BagOfValuesArray {
         obj.put("reading", reading);
         obj.put("note", note);
         obj.put("made_at", createdAt);
+        obj.put("uploaded", "true"); //todo might have to generalise this a bit
         rt = obj;
         return rt;
     }

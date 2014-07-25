@@ -8,6 +8,8 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
+    <!--//*** Didi motivated worX ***-->
+
     <TextView
         android:id="@+id/textViewDay"
         android:layout_width="wrap_content"
@@ -25,7 +27,7 @@
         android:layout_above="@+id/textViewTime"
         android:layout_alignLeft="@+id/editTextTime"
         android:layout_alignStart="@+id/editTextTime" />
-     <!--SET DATE PICKER HERE -->
+     <!--SET DATE PICKER  -->
     <Spinner
         android:id="@+id/spinner"
         android:layout_alignEnd="@id/textViewDay"
@@ -107,12 +109,12 @@
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
         android:text="@string/button_save"
         android:id="@+id/button_save"
         android:layout_below="@+id/editTextNote"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="100dp"
+        android:padding="10dp"
         android:onClick="saveData"/>
 
 

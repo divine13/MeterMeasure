@@ -36,13 +36,6 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
     //select all rows with the the default time and then just get the reading
     //
     private final String TAG = MeterReadingsDiff.class.getSimpleName();
-    private static String[] projection =
-            {
-                    MeterReadingsContract.Column.ID,
-                    MeterReadingsContract.Column.READING,
-                    MeterReadingsContract.Column.TIME,
-                    MeterReadingsContract.Column.DAY
-    };
 
     private static final String[] FROM = {
             ProcessedDataContract.Column.ID,
@@ -71,11 +64,14 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
         MeterUtils tool = new MeterUtils();
         currentTime = tool.getCurrentTime();
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        Cursor statsCursor = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
-        Cursor pCursor = getContentResolver().query(ProcessedDataContract.P_DATA_CONTENT_URI,null,null,null,null);
 
-        int fff= statsCursor.getCount(); //todo fix bad variable
-        int numRowsPD = pCursor.getCount();
+        Cursor statsCursor = getContentResolver().query
+                (MeterReadingStatsContract.STATES_CONTENT_URI,null,null,null,null);
+        Cursor pCursor = getContentResolver().query
+                (ProcessedDataContract.P_DATA_CONTENT_URI,null,null,null,null);
+
+        int fff= statsCursor.getCount();
+
         defaultTime = prefs.getString("time", currentTime);
         if (defaultTime.equals(currentTime) || TextUtils.isEmpty(defaultTime)){
            Toast.makeText(this,"please set the default time that you always check your meter reading  ",
@@ -85,9 +81,9 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
             Toast.makeText(this, "Generating your meter reading stats using  this " + defaultTime + "  time",
                     Toast.LENGTH_LONG).show();
         }
-        String[] selectionArgs = {defaultTime};
+        String[] selectionArgs = {defaultTime};      //*** Didi motivated worX ***//
 
-       mCursor = getContentResolver().query //TODO This should be done using a Loader leave it for now and below below
+       mCursor = getContentResolver().query
                (
                        MeterReadingsContract.CONTENT_URI, null,
                        MeterReadingsContract.THE_DIFF_SELECTION_STATEMENT,
@@ -98,7 +94,6 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
 
         int noC = mCursor.getCount();
         ContentValues values = new ContentValues();
-        if (fff != numRowsPD) {
             while (mCursor.moveToNext()) {
                 int i = mCursor.getPosition();
                 Log.d(TAG, "now At " + i);
@@ -113,9 +108,9 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
                     finish();
                 } else {
                     getContentResolver().insert(MeterReadingStatsContract.STATES_CONTENT_URI, values);
-                    Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
                 }
             }
+            Toast.makeText(this, "number of columns returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
 
             Cursor statsCursorsSecond = getContentResolver().query(MeterReadingStatsContract.STATES_CONTENT_URI, null, null, null, null);
 
@@ -156,13 +151,7 @@ public class MeterReadingsDiff extends ListActivity implements LoaderManager.Loa
             setListAdapter(mAdapter);
 
             getLoaderManager().initLoader(LOADER_ID, null, this);
-        }else{
-            //just load the data
-            mAdapter = new SimpleCursorAdapter(this, R.layout.list_item_meter_reading_diff, null, FROM, TO, 0);
-            setListAdapter(mAdapter);
-
-            getLoaderManager().initLoader(LOADER_ID, null, this);
-        }
+            Log.d(TAG, "just loaded the and inserted the new values ");
     }
 
     @Override

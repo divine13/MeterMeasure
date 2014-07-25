@@ -27,7 +27,7 @@ public class MeterReadingsContract {
     public static final int METER_TYPE = 1;
     public static final int METER_DIR = 2;
     public static final String THE_DIFF_SELECTION_STATEMENT = "time=?"; //simple to the eye, it was not
-    public static final String THE_FRESHEST_SELECTION_STATEMENT = "created_at > ?";
+    public static final String THE_FRESHEST_SELECTION_STATEMENT = "uploaded = ?";
 
     public class Column{
         public static final String ID = BaseColumns._ID;
@@ -36,5 +36,6 @@ public class MeterReadingsContract {
         public static final String TIME = "time";
         public static final String READING = "reading";
         public static final String NOTE = "note";
+        public static final String UPLOADED = "uploaded";
     }
 }

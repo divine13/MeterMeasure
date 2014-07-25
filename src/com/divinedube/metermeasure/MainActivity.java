@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
         builder.setMessage(R.string.about).setTitle(R.string.motivation)
-                .setIcon(android.R.drawable.ic_dialog_info);
+                .setIcon(R.drawable.ic_launcher);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

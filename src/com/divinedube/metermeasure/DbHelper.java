@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String sqlReadings = String.format
-             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer)",
+             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s boolean)",
 
                 MeterReadingsContract.TABLE,
                 MeterReadingsContract.Column.ID,
@@ -32,7 +32,8 @@ public class DbHelper extends SQLiteOpenHelper {
                 MeterReadingsContract.Column.TIME,
                 MeterReadingsContract.Column.READING,
                 MeterReadingsContract.Column.NOTE,
-                MeterReadingsContract.Column.CREATED_AT
+                MeterReadingsContract.Column.CREATED_AT,
+                MeterReadingsContract.Column.UPLOADED
                 );
 
         Log.d(TAG,"creating the meter readings db with this " + sqlReadings + " command in the onCreate method(**MAIN_DB**)");
@@ -45,7 +46,6 @@ public class DbHelper extends SQLiteOpenHelper {
                       MeterReadingStatsContract.Column.READING_FOR_DAY_1,
                       MeterReadingStatsContract.Column.READING_FOR_DAY_2,
                       MeterReadingStatsContract.Column.DIFFERENCE,
-                        //**MUST BE UNIQUE COLUMNS**// TOdo strap this *make it clean rm useless columns *
                       MeterReadingStatsContract.Column.NAME_FOR_DAY_1,
                       MeterReadingStatsContract.Column.NAME_FOR_DAY_2,
                       MeterReadingStatsContract.Column.READING_FOR_DAY_1,

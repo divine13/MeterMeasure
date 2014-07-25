@@ -47,7 +47,6 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
 
     long newRowId;
     ContentValues values;
-    SQLiteDatabase db;
     Spinner spinner;
     MeterUtils util = new MeterUtils();
 
@@ -64,6 +63,7 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         mEditTextDay = (EditText) findViewById(R.id.editTextDay);
         mEditTextTime = (EditText) findViewById(R.id.editTextTime);
         mEditTextReading = (EditText) findViewById(R.id.editTextReading);
+        mEditTextReading.requestFocus();
         mEditTextNote = (EditText) findViewById(R.id.editTextNote);
         spinner = (Spinner) findViewById(R.id.spinner); //todo might just take out all of it just use cal date utils
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -94,10 +94,9 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         Log.d(TAG, "int the method of the onItemSelected ");
          selectedItem =  parent.getItemAtPosition(position).toString();
         Toast.makeText(this,"You Selected " + selectedItem , Toast.LENGTH_LONG).show();
-        return;
     }
 
-    public void saveData(MenuItem item) {
+    public void saveDatas(MenuItem item) {
         save();
     }
 
@@ -143,19 +142,18 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         newFragment.show(getFragmentManager(),"time picker");
     }
 
-    public void saveData(View view){ //I will run this on its thread some time later for now lets get the basics down
+    //
+    public void saveData(View view){
        save();
     }
 
+    //todo a smooth experience remember to run this on its own thread
     private void save(){
         try {
             day =  mEditTextDay.getText().toString() + " " + selectedItem;
             time = mEditTextTime.getText().toString();
             reading = Double.valueOf(mEditTextReading.getText().toString());
             note = mEditTextNote.getText().toString();
-
-            DbHelper dbHelper = new DbHelper(this);
-            db = dbHelper.getWritableDatabase();
 
             values = new ContentValues();
             // values.put(MeterReadingsContract.Column.ID, newRowId);
@@ -169,7 +167,7 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
             getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
 
             Log.d(TAG, "inserting "  + time + reading + note + " into db " +
-                    MeterReadingsContract.TABLE + " at "+System.currentTimeMillis());
+                    MeterReadingsContract.TABLE + " at "+ System.currentTimeMillis());
             //newRowId = db.insert(MeterReadingsContract.TABLE, null, values);
             Toast.makeText(this, "Your Meter Readings have been saved", Toast.LENGTH_LONG).show();
             finish();
@@ -189,13 +187,13 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         return true;
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()){
-//            case R.id.action_save:
-//
-//            default:
-//                return false;
-//        }
-//    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_save:
+                save();
+            default:
+                return false;
+        }
+    }
 }

@@ -4,7 +4,6 @@
 
     <EditTextPreference
         android:key="time"
-        android:inputType="datetime"
         android:summary="@string/time_summary"
         android:title="@string/check_time"
         android:id="@+id/settings_set_time"
