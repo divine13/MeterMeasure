@@ -48,7 +48,7 @@ import android.os.Handler;
     @Override
     public void onCreate() {
         super.onCreate();
-        mHandler = new Handler();
+        mHandler = new Handler(Looper.getMainLooper());
 
     }
 
@@ -65,6 +65,8 @@ import android.os.Handler;
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        //todo refactor this to use the boolean field
+        //
         JSONObject jsObj =  getLastReading(TAG, GET_LAST_METER_URL);
         String[] projection = {MeterReadingsContract.Column.CREATED_AT};
         Cursor cursor = getContentResolver().query(MeterReadingsContract.CONTENT_URI,projection,null,null,MeterReadingsContract.NORMAL_SORT_ORDER);
@@ -74,8 +76,12 @@ import android.os.Handler;
 
             String serverLastRecord = jsObj.getJSONObject("data").getJSONObject("meter").getString("made_at");
             Long serverLastRecordAsLong = new Long(serverLastRecord);
+
+
+
            Log.d(TAG, "the server last record is " + serverLastRecord);
             Log.d(TAG, "the date of the last record is " + serverLastRecordAsLong);
+
             long phoneLastRecordAsLong = cursor.getLong(0);                                             //*#** Didi motivated worX **#*//
             Log.d(TAG, "we are currently selecting by " + phoneLastRecordAsLong + "count is " + count);
             if (serverLastRecordAsLong > phoneLastRecordAsLong){
@@ -85,7 +91,7 @@ import android.os.Handler;
                 download(phoneLastRecordAsLong);
             }else if (serverLastRecordAsLong < phoneLastRecordAsLong){
                 Log.d(TAG, "true the server data needs uploading and will do just that right now uploading...");
-                String[] serverLastRecordAsArr = {serverLastRecord};
+                String[] serverLastRecordAsArr = {"false"};
                 upload(serverLastRecordAsArr);
             }
         }else if (count <= 0){
@@ -93,8 +99,8 @@ import android.os.Handler;
              download(0L);
           }
             else {
-                toast("Nothing to update.Your readings are up to date");
-                Log.d(TAG, "Nothing to update.Your readings are up to date");
+                toast("Nothing was updated");
+                Log.d(TAG, "Nothing was updated ");
             }
         }catch (JSONException jse){
             jse.printStackTrace();
@@ -207,15 +213,18 @@ import android.os.Handler;
                 JSONObject jsObj = new JSONObject(jsonOfDb); //efficient because only this one will be created
                 JSONArray js = jsObj.getJSONArray("meter");
                 JSONObject myFinalJsnObj;
+
+
                 int numObjectsInArray = js.length();
                 for (int i = 0; i < numObjectsInArray; i++) {       //*#** Didi motivated worX **#*//
                     json.put("success", false);
                     json.put("info", "big failure");
-                    Log.d(TAG, "the id of the object at index i is " + js.getJSONObject(i).getString("id")
+
+                    Log.d(TAG, "the _id of the object at index i is " + js.getJSONObject(i).getString("_id")
                             + "the length of the array is " + numObjectsInArray);
                     myFinalJsnObj = js.getJSONObject(i);
                     holder.put("meter", myFinalJsnObj);
-
+                    setUploaded(holder);
                     StringEntity se = new StringEntity(holder.toString());
                     post.setEntity(se);
                     se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
@@ -223,7 +232,6 @@ import android.os.Handler;
                     post.setHeader("Content-Type", "application/json");
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
                     response = client.execute(post,responseHandler);
-                    setUploaded(holder);
                     json = new JSONObject(response);
                     Log.d(TAG, "the returned json object form server is " + json.toString());
                 }
@@ -251,7 +259,7 @@ import android.os.Handler;
     }
 
     private void toastError(){
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        new Handler().post(new Runnable() {
             @Override
             public void run() {
                 Toast.makeText(myContext(), "Failed to Uploaded your readings", Toast.LENGTH_LONG).show();
@@ -267,17 +275,22 @@ import android.os.Handler;
         });
     }
     private Context myContext(){
+
         return this;
     }
 
     private void setUploaded(JSONObject jsonObject){
         try {
-            int id = jsonObject.getJSONObject("meter").getInt("id");
-            Log.d(TAG, "the id of the uploaded val is " + id);
+            int _id = jsonObject.getJSONObject("meter").getInt("_id");
+            Log.d(TAG, "the id of the uploaded val is " + _id);
            ContentValues values = new ContentValues();
             boolean uploaded = jsonObject.getJSONObject("meter").getBoolean("uploaded");
+            Log.d(TAG, "is it true? " + uploaded);
             values.put(MeterReadingsContract.Column.UPLOADED, uploaded);
-            getContentResolver().update(MeterReadingsContract.CONTENT_URI,values,"_id = ?", new String[id]);
+
+           Integer integer = new Integer(_id);
+           String[] selection = {integer.toString()};
+            getContentResolver().update(MeterReadingsContract.CONTENT_URI,values,"_id = ?",selection);
 
         }catch (JSONException jse){
             jse.printStackTrace();

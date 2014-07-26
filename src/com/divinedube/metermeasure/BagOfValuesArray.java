@@ -2,6 +2,8 @@ package com.divinedube.metermeasure;
 
 
 
+import android.os.Build;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,13 +32,14 @@ public class BagOfValuesArray {
 
     public HashMap setMap(int id, String day, String time, double reading, String note, String createdAt){
         HashMap<String, Object> obj = new HashMap<String, Object>();
-        obj.put("id", id);
+        obj.put("_id", id);
         obj.put("day", day);
         obj.put("time",time);
         obj.put("reading", reading);
         obj.put("note", note);
         obj.put("made_at", createdAt);
-        obj.put("uploaded", "true"); //todo might have to generalise this a bit
+        obj.put("uploaded", true); //todo might have to generalise this a bit
+        obj.put("phone_id", Build.ID);
         rt = obj;
         return rt;
     }
