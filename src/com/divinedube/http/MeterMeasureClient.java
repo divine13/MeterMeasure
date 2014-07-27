@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
@@ -42,7 +43,8 @@ import android.os.Handler;
     private static final String TAG = "MeterMeasureClient";
     public static final String ROOT_URL = "http://192.168.56.1:3000";
     public static final String CREATE_METER_END_POINT_URL = ROOT_URL + "/meters.json";
-    public static final String GET_LAST_METER_URL = ROOT_URL + "/meters/last.json;";
+    public static final String GET_LAST_METER_URL = ROOT_URL + "/meters/last.json";
+    private static final String PHONE_ID = Build.ID;
     Handler mHandler;
 
     @Override
@@ -58,53 +60,66 @@ import android.os.Handler;
 
     JSONObject holder = new JSONObject();
 
-
     public MeterMeasureClient() {
         super(TAG);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //todo refactor this to use the boolean field
-        //
-        JSONObject jsObj =  getLastReading(TAG, GET_LAST_METER_URL);
-        String[] projection = {MeterReadingsContract.Column.CREATED_AT};
-        Cursor cursor = getContentResolver().query(MeterReadingsContract.CONTENT_URI,projection,null,null,MeterReadingsContract.NORMAL_SORT_ORDER);
-        int count = cursor.getCount();
-        try {
-            if ((cursor.moveToLast()) && (isConnectedToServer(TAG))){
-
-            String serverLastRecord = jsObj.getJSONObject("data").getJSONObject("meter").getString("made_at");
-            Long serverLastRecordAsLong = new Long(serverLastRecord);
-
-
-
-           Log.d(TAG, "the server last record is " + serverLastRecord);
-            Log.d(TAG, "the date of the last record is " + serverLastRecordAsLong);
-
-            long phoneLastRecordAsLong = cursor.getLong(0);                                             //*#** Didi motivated worX **#*//
-            Log.d(TAG, "we are currently selecting by " + phoneLastRecordAsLong + "count is " + count);
-            if (serverLastRecordAsLong > phoneLastRecordAsLong){
-                //todo download make method in server to give the record that are currently newer than the phone`s current
-                //todo and actually insert them
-                Log.d(TAG,"downloading all the newest readings from the server and inserting them in the phone db to keep up with server");
-                download(phoneLastRecordAsLong);
-            }else if (serverLastRecordAsLong < phoneLastRecordAsLong){
-                Log.d(TAG, "true the server data needs uploading and will do just that right now uploading...");
-                String[] serverLastRecordAsArr = {"false"};
-                upload(serverLastRecordAsArr);
+        //if check is != 0 download
+        //else upload those that have not been uploaded
+        int checkNum = check();
+        if (isConnectedToServer(TAG, checkNum)) {
+            if (checkNum > 0) {
+                 Log.d(TAG, checkNum +" new ones are available");
+                download(PHONE_ID);
+                 toast("added " + checkNum + "meters readings");
+            } else {
+                upload(new String[0]);
+                toast("You are up to date.Syncing with other devices");
             }
-        }else if (count <= 0){
-                Log.d(TAG, "just downloading");
-             download(0L);
-          }
-            else {
-                toast("Nothing was updated");
-                Log.d(TAG, "Nothing was updated ");
-            }
-        }catch (JSONException jse){
-            jse.printStackTrace();
         }
+        //todo refactor this to use the boolean field
+        //i must parse the the phone id check if the phone id on the
+        //i want to upload when the phone db has some data that is not uploaded
+//        JSONObject jsObj =  getLastReading(TAG, GET_LAST_METER_URL);
+//        String[] projection = {MeterReadingsContract.Column.CREATED_AT};
+//        Cursor cursor = getContentResolver().query(MeterReadingsContract.CONTENT_URI,projection,null,null,MeterReadingsContract.NORMAL_SORT_ORDER);
+//        int count = cursor.getCount();
+//        try {
+//            if ((cursor.moveToLast()) && (isConnectedToServer(TAG))){
+//
+//            String serverLastRecord = jsObj.getJSONObject("data").getJSONObject("meter").getString("made_at");
+//            Long serverLastRecordAsLong = new Long(serverLastRecord);
+//
+//
+//
+//           Log.d(TAG, "the server last record is " + serverLastRecord);
+//            Log.d(TAG, "the date of the last record is " + serverLastRecordAsLong);
+//
+//            long phoneLastRecordAsLong = cursor.getLong(0);                                             //*#** Didi motivated worX **#*//
+//            Log.d(TAG, "we are currently selecting by " + phoneLastRecordAsLong + "count is " + count);
+//            if (serverLastRecordAsLong > phoneLastRecordAsLong){
+//                //todo download make method in server to give the record that are currently newer than the phone`s current
+//                //todo and actually insert them
+//                Log.d(TAG,"downloading all the newest readings from the server and inserting them in the phone db to keep up with server");
+//                download(phoneLastRecordAsLong);
+//            }else if (serverLastRecordAsLong < phoneLastRecordAsLong){
+//                Log.d(TAG, "true the server data needs uploading and will do just that right now uploading...");
+//                String[] serverLastRecordAsArr = {"false"};
+//                upload(serverLastRecordAsArr);
+//            }
+//        }else if (count <= 0){
+//                Log.d(TAG, "just downloading");
+//             download(0L);
+//          }
+//            else {
+//                toast("Nothing was updated");
+//                Log.d(TAG, "Nothing was updated ");
+//            }
+//        }catch (JSONException jse){
+//            jse.printStackTrace();
+//        }
     }
 
     public JSONObject getLastReading(String classTag, String  getLastMeterUrl){
@@ -126,28 +141,55 @@ import android.os.Handler;
         return jsObj;
     }
 
-    public  boolean isConnectedToServer(String tag){
-        boolean yes;
+    private int check(){
+        String resp = "";
+        String url = ROOT_URL + "/meters/" + Build.ID + "/check_for_me.json";
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpPut httpPut = new HttpPut(url);
+        ResponseHandler<String> getResponseHandler = new BasicResponseHandler();
         try {
-            JSONObject jsObj = new MeterMeasureClient().getLastReading(tag, GET_LAST_METER_URL);
-            jsObj.getJSONObject("data").getJSONObject("meter").getString("made_at");
-            yes = true;
-        }catch (NullPointerException npe){
-            npe.printStackTrace();
-            toast("please make sure that you are truly connected to the internet");
-            yes = false;
-        } catch (JSONException jsne) {
-            jsne.printStackTrace();
-            toast("please make sure that you are truly connected to the internet");
-            yes = false;
+           resp = httpClient.execute(httpPut,getResponseHandler);
+            Log.d(TAG, "the check response is " + resp);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
         }
-        return yes;
+
+        return Integer.valueOf(resp);
     }
 
-    public void download(long phoneLastRecord){
+    public  boolean isConnectedToServer(String tag, int check){
+        boolean yes;
+//        boolean yes;
+//        try {
+//            JSONObject jsObj = new MeterMeasureClient().getLastReading(tag, GET_LAST_METER_URL);
+//            jsObj.getJSONObject("data").getJSONObject("meter").getString("made_at");
+//            yes = true;
+//        }catch (NullPointerException npe){
+//            npe.printStackTrace();
+//            toast("please make sure that you are truly connected to the internet");
+//            yes = false;
+//        } catch (JSONException jsne) {
+//            jsne.printStackTrace();
+//            toast("please make sure that you are truly connected to the internet");
+//            yes = false;
+//        }
+//        return yes;
+        if (check >= 0){
+            Log.d(tag, "Man you are not connected to the server ");
+            yes = true;
+        }else {
+            Log.d(tag, "could not connect to the server");
+            toast("Please make sure you are connected to the internet.Try going on Google with your browser");
+            yes = false;
+        }
+         return yes;
+    }
+
+    public void download(String phoneID){
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        String url = ROOT_URL + "/meters" + "/" + phoneLastRecord + "/newer.json";
+        String url = ROOT_URL + "/meters/"+ phoneID + "/newer.json";
         String response;
         HttpPut httpPut = new HttpPut(url);
         ResponseHandler<String> stringResponseHandler = new BasicResponseHandler();
@@ -171,6 +213,7 @@ import android.os.Handler;
                 values.put(MeterReadingsContract.Column.READING, reading);
                 values.put(MeterReadingsContract.Column.NOTE, note);
                 values.put(MeterReadingsContract.Column.CREATED_AT, madeAt);
+                values.put(MeterReadingsContract.Column.UPLOADED, 1);
                 Uri uri = getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
                 Log.d(TAG, "inserted " + uri);
             }
@@ -258,6 +301,24 @@ import android.os.Handler;
         }
     }
 
+    private void setUploaded(JSONObject jsonObject){
+        try {
+            int _id = jsonObject.getJSONObject("meter").getInt("_id");
+            Log.d(TAG, "the id of the uploaded val is " + _id);
+           ContentValues values = new ContentValues();
+            boolean uploaded = jsonObject.getJSONObject("meter").getBoolean("uploaded");
+            Log.d(TAG, "is it true? " + uploaded);
+            values.put(MeterReadingsContract.Column.UPLOADED, uploaded);
+
+           Integer integer = new Integer(_id);
+           String[] selection = {integer.toString()};
+            getContentResolver().update(MeterReadingsContract.CONTENT_URI,values,"_id = ?",selection);
+
+        }catch (JSONException jse){
+            jse.printStackTrace();
+        }
+    }
+
     private void toastError(){
         new Handler().post(new Runnable() {
             @Override
@@ -278,22 +339,6 @@ import android.os.Handler;
 
         return this;
     }
-
-    private void setUploaded(JSONObject jsonObject){
-        try {
-            int _id = jsonObject.getJSONObject("meter").getInt("_id");
-            Log.d(TAG, "the id of the uploaded val is " + _id);
-           ContentValues values = new ContentValues();
-            boolean uploaded = jsonObject.getJSONObject("meter").getBoolean("uploaded");
-            Log.d(TAG, "is it true? " + uploaded);
-            values.put(MeterReadingsContract.Column.UPLOADED, uploaded);
-
-           Integer integer = new Integer(_id);
-           String[] selection = {integer.toString()};
-            getContentResolver().update(MeterReadingsContract.CONTENT_URI,values,"_id = ?",selection);
-
-        }catch (JSONException jse){
-            jse.printStackTrace();
-        }
-    }
   }
+
+
