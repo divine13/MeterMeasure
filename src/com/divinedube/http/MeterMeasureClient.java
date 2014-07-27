@@ -73,9 +73,11 @@ import android.os.Handler;
             if (checkNum > 0) {
                  Log.d(TAG, checkNum +" new ones are available");
                 download(PHONE_ID);
+                //todo might have to upload here it wont hurt i promise
                  toast("added " + checkNum + "meters readings");
             } else {
-                upload(new String[0]);
+                String[] notUploaded = {"false"};
+                upload(notUploaded);
                 toast("You are up to date.Syncing with other devices");
             }
         }
@@ -142,7 +144,7 @@ import android.os.Handler;
     }
 
     private int check(){
-        String resp = "";
+        String resp;
         String url = ROOT_URL + "/meters/" + Build.ID + "/check_for_me.json";
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPut httpPut = new HttpPut(url);
@@ -176,7 +178,7 @@ import android.os.Handler;
 //        }
 //        return yes;
         if (check >= 0){
-            Log.d(tag, "Man you are not connected to the server ");
+            Log.d(tag, "Man you are connected to the server ");
             yes = true;
         }else {
             Log.d(tag, "could not connect to the server");
@@ -297,7 +299,10 @@ import android.os.Handler;
         }catch (JSONException je){
             je.printStackTrace();
             Log.e(TAG, "JSON " + je);
-            toastError();
+            if (json.toString().equals("{\"meter\":[]}")){
+                toast("your readings are up to date");
+                Log.d(TAG, "your readings are up to date" );
+            }
         }
     }
 
