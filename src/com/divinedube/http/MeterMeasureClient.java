@@ -6,8 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Looper;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -41,17 +42,16 @@ import android.os.Handler;
   public class MeterMeasureClient extends IntentService {
 
     private static final String TAG = "MeterMeasureClient";
-    public static final String ROOT_URL = "http://192.168.56.1:3000";
+    public static final String ROOT_URL = "http://10.0.2.2:3000";
     public static final String CREATE_METER_END_POINT_URL = ROOT_URL + "/meters.json";
-    public static final String GET_LAST_METER_URL = ROOT_URL + "/meters/last.json";
-    private static final String PHONE_ID = Build.ID;
+//    public static final String GET_LAST_METER_URL = ROOT_URL + "/meters/last.json";
+    private  String PHONE_ID = generateId();
     Handler mHandler;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mHandler = new Handler(Looper.getMainLooper());
-
     }
 
     //todo these dont need to be Global vars
@@ -63,13 +63,27 @@ import android.os.Handler;
     public MeterMeasureClient() {
         super(TAG);
     }
+    private String generateId(){
+
+        TelephonyManager tel = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        if(tel.getDeviceId() != null) {
+            Integer integer = Integer.valueOf(tel.getDeviceId());
+            double val = integer / 5379.973;
+            return "devI" + val + "D";
+        }else{
+            String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+            return id;
+        }
+    }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         //if check is != 0 download
-        //else upload those that have not been uploaded
+        //else upload those that have not been uploaded\
+        toast("phone id " + PHONE_ID); // must actually use the meter id customer ID on vip card
         int checkNum = check();
         if (isConnectedToServer(TAG, checkNum)) {
+            Log.d(TAG, "the check num is " + checkNum);
             if (checkNum > 0) {
                  Log.d(TAG, checkNum +" new ones are available");
                 download(PHONE_ID);
@@ -145,7 +159,7 @@ import android.os.Handler;
 
     private int check(){
         String resp;
-        String url = ROOT_URL + "/meters/" + Build.ID + "/check_for_me.json";
+        String url = ROOT_URL + "/meters/" + PHONE_ID + "/check_for_me.json";
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPut httpPut = new HttpPut(url);
         ResponseHandler<String> getResponseHandler = new BasicResponseHandler();
@@ -243,7 +257,7 @@ import android.os.Handler;
             String note = c.getString(4);
             String madeAt = c.getString(5);
 
-            bva.setMap(_id, day, time, reading, note, madeAt);
+            bva.setMap(_id, day, time, reading, note, madeAt, PHONE_ID);
             bva.putArr();
 
         } //get the gson representative of the meter db
