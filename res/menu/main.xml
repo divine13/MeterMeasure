@@ -28,6 +28,11 @@
         android:title="@string/about_label"
         android:orderInCategory="300"/>
     <item
+        android:id="@+id/action_sign_up"
+        android:title="@string/sign_up"
+        android:orderInCategory="201"
+        />
+    <item
         android:id="@+id/action_sync_data"
         android:showAsAction="ifRoom"
         android:title="@string/update_data"

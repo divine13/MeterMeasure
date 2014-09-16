@@ -7,7 +7,7 @@ import java.util.HashMap;
 /**
  * Created by Divine Dube on 2014/07/14.
  */
-
+ //todo move this class to helpers package
 public class BagOfValuesArray {
 
 //    ArrayList<Object> meter = new ArrayList<Object>();
@@ -36,6 +36,7 @@ public class BagOfValuesArray {
         obj.put("made_at", createdAt);
         obj.put("uploaded", true); //todo might have to generalise this a bit
         obj.put("phone_id", deviceID);
+
         rt = obj;
         return rt;
     }

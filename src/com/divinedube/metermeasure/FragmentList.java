@@ -39,7 +39,7 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
     @Override
     public void onActivityCreated(Bundle savedInstance){
         super.onActivityCreated(savedInstance);
-        setEmptyText("Searching for Saved Meter Readings...");
+        setEmptyText("You currently have no Electricity Meter Readings press the add(+) to add your own");
 
         mAdapter = new SimpleCursorAdapter(getActivity(), R.layout.list_item, null, FROM, TO, 0);
         setListAdapter(mAdapter);

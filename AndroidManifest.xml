@@ -9,7 +9,6 @@
         android:targetSdkVersion="20" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -41,17 +40,40 @@
         </activity>
         <activity android:name=".NewMeterReadingsActivity"
             android:label="@string/new_meter_readings_label"
-            android:parentActivityName=".MainActivity">
+           >
             <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
+                android:name="android.PARENT_ACTIVITY"
                 android:value="com.divinedube.metermeasure.MainActivity"/>
             </activity>
-        <activity android:name=".SettingsActivity" android:label="@string/action_settings" android:parentActivityName=".MainActivity">
-            <meta-data android:name="android.support.PARENT_ACTIVITY"
+        <activity android:name=".SettingsActivity" android:label="@string/action_settings">
+            <meta-data android:name="android.PARENT_ACTIVITY"
                 android:value="com.divinedube.metermeasure.MainActivity"/>
         </activity>
-        <activity android:name=".MeterReadingsDiff" android:label="@string/show_your_meter_stats"/>
+        <activity android:name=".MeterReadingsDiff" android:label="@string/show_your_meter_stats">
+            <meta-data
+                android:name="android.PARENT_ACTIVITY"
+                android:value="com.divinedube.metermeasure.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".SignIn"
+            android:label="Sign In" >
+
+            <meta-data
+                android:name="android.PARENT_ACTIVITY"
+                android:value="com.divinedube.metermeasure.MainActivity"/>
+            </activity>
+        <activity
+            android:name=".SignUpActivity"
+            android:label="@string/sign_up">
+
+            <meta-data
+                android:name="android.PARENT_ACTIVITY"
+                android:value="com.divinedube.metermeasure.MainActivity"/>
+            </activity>
+
+
         <service android:name="com.divinedube.http.MeterMeasureClient" />
+        <service android:name="com.divinedube.http.SignUpClient"/>
     </application>
 
 </manifest>

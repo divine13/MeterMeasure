@@ -5,15 +5,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.divinedube.helpers.MeterUtils;
+
 /**
  * Created by Divine Dube on 2014/06/27.
  */
 public class DbHelper extends SQLiteOpenHelper {
 
     public static final String TAG = DbHelper.class.getSimpleName();
-
+    MeterUtils utils;
+    Context c;
     public DbHelper(Context context){
         super(context, MeterReadingsContract.DB_NAME, null, MeterReadingsContract.DB_VERSION);
+        utils = new MeterUtils();
+         c = context;
+        Log.d(TAG, "calling the dbHelper constructor");
     }
     /**
      * Called when the database is created for the first time. This is where the
@@ -23,8 +29,9 @@ public class DbHelper extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
+        utils.setUUID(c);
         String sqlReadings = String.format
-             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s boolean default 0, unique(%s, %s))",
+             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s boolean default false, unique(%s, %s))",
 
                 MeterReadingsContract.TABLE,
                 MeterReadingsContract.Column.ID,
@@ -56,14 +63,15 @@ public class DbHelper extends SQLiteOpenHelper {
               );
 
         String processedData = String.format(                               //goodies   //goodies
-                "create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer)",
+                "create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer, %s boolean default false )",
                     ProcessedDataContract.TABLE,
                     ProcessedDataContract.Column.ID,
                     ProcessedDataContract.Column.DAY_1,
                     ProcessedDataContract.Column.DAY_2,
                     ProcessedDataContract.Column.READING_FOR_DAY_1,
                     ProcessedDataContract.Column.READING_FOR_DAY_2,
-                    ProcessedDataContract.Column.DIFFERENCE
+                    ProcessedDataContract.Column.DIFFERENCE,
+                    ProcessedDataContract.Column.RECHARGED
                 );
 
         Log.d(TAG, "creating the meter readings db with this " + sqlStates + " command in the onCreate method(**STATS_DB**)");
@@ -98,4 +106,6 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(MeterReadingsContract.DROP_TABLE);
         onCreate(db);
     }
+
+
 }

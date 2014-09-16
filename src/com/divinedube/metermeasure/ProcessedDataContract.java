@@ -20,6 +20,7 @@ public class ProcessedDataContract  {
         public static final String READING_FOR_DAY_1 = "reading_for_day_1";
         public static final String READING_FOR_DAY_2 = "reading_for_day_2";
         public static final String DIFFERENCE = "difference";
+        public static final String RECHARGED = "recharged";
     }
 
 }

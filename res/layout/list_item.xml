@@ -39,6 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/list_item_textViewReadingMain"
         android:text="@string/notes"
-        android:textSize="10sp"/>
+        android:textSize="12sp"/>
 
 </RelativeLayout>

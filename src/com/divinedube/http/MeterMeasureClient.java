@@ -4,17 +4,18 @@ import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Looper;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.divinedube.metermeasure.BagOfValuesArray;
 
 import com.divinedube.metermeasure.MeterReadingsContract;
+import com.divinedube.helpers.MeterUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -33,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+
 import android.os.Handler;
 
 /**
@@ -42,16 +44,21 @@ import android.os.Handler;
   public class MeterMeasureClient extends IntentService {
 
     private static final String TAG = "MeterMeasureClient";
-    public static final String ROOT_URL = "http://10.0.2.2:3000";
-    public static final String CREATE_METER_END_POINT_URL = ROOT_URL + "/meters.json";
-//    public static final String GET_LAST_METER_URL = ROOT_URL + "/meters/last.json";
-    private  String PHONE_ID = generateId();
+    //    public static final String GET_LAST_METER_URL = ROOT_URL + "/meters/last.json";
+    private String PHONE_ID;
     Handler mHandler;
+   // Context s;
+    SharedPreferences prefs;
+   // public static final String CREATE_METER_END_POINT_URL = MeterUtils.ROOT_URL + "/meters.json";
 
     @Override
     public void onCreate() {
         super.onCreate();
         mHandler = new Handler(Looper.getMainLooper());
+        MeterUtils utils = new MeterUtils();
+        PHONE_ID = utils.getID(this);
+      //  s = this; //use this next time //todo try this with toasts
+
     }
 
     //todo these dont need to be Global vars
@@ -63,35 +70,30 @@ import android.os.Handler;
     public MeterMeasureClient() {
         super(TAG);
     }
-    private String generateId(){
 
-        TelephonyManager tel = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        if(tel.getDeviceId() != null) {
-            Integer integer = Integer.valueOf(tel.getDeviceId());
-            double val = integer / 5379.973;
-            return "devI" + val + "D";
-        }else{
-            String id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-            return id;
-        }
-    }
+
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        String token = prefs.getString("rememberToken", null);
         //if check is != 0 download
         //else upload those that have not been uploaded\
         toast("phone id " + PHONE_ID); // must actually use the meter id customer ID on vip card
-        int checkNum = check();
+        toast("email " + token);
+
+        int checkNum = check(token);
+        String[] notUploaded = {"false"};
         if (isConnectedToServer(TAG, checkNum)) {
             Log.d(TAG, "the check num is " + checkNum);
             if (checkNum > 0) {
                  Log.d(TAG, checkNum +" new ones are available");
                 download(PHONE_ID);
+                upload(notUploaded, token);
                 //todo might have to upload here it wont hurt i promise
-                 toast("added " + checkNum + "meters readings");
+                 toast("added " + checkNum + " meters readings");
             } else {
-                String[] notUploaded = {"false"};
-                upload(notUploaded);
+                upload(notUploaded, token);
                 toast("You are up to date.Syncing with other devices");
             }
         }
@@ -157,9 +159,10 @@ import android.os.Handler;
         return jsObj;
     }
 
-    private int check(){
+    private int check(String email){
         String resp;
-        String url = ROOT_URL + "/meters/" + PHONE_ID + "/check_for_me.json";
+        String url = MeterUtils.ROOT_URL +"/"+ email + "/meters/" + PHONE_ID + "/check_for_me.json";
+        Log.d(TAG, "the uri is " + url);
         DefaultHttpClient httpClient = new DefaultHttpClient();
         HttpPut httpPut = new HttpPut(url);
         ResponseHandler<String> getResponseHandler = new BasicResponseHandler();
@@ -205,7 +208,7 @@ import android.os.Handler;
     public void download(String phoneID){
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        String url = ROOT_URL + "/meters/"+ phoneID + "/newer.json";
+        String url = MeterUtils.ROOT_URL + "/meters/"+ phoneID + "/newer.json";
         String response;
         HttpPut httpPut = new HttpPut(url);
         ResponseHandler<String> stringResponseHandler = new BasicResponseHandler();
@@ -240,7 +243,7 @@ import android.os.Handler;
         }
     }
 
-    public void upload(String[] selectionArgs){
+    public void upload(String[] selectionArgs, String token){
         //todo select only those field which have not been pushed to the server so have to have a boolean field in meter.
         Cursor c = getContentResolver().query(MeterReadingsContract.CONTENT_URI, null,
                 MeterReadingsContract.THE_FRESHEST_SELECTION_STATEMENT, selectionArgs, MeterReadingsContract.DEFAULT_SORT);
@@ -260,11 +263,11 @@ import android.os.Handler;
             bva.setMap(_id, day, time, reading, note, madeAt, PHONE_ID);
             bva.putArr();
 
-        } //get the gson representative of the meter db
+        } //get the json representative of the meter db
         String jsonOfDb  = gson.toJson(bva);
         Log.d(TAG, jsonOfDb);
         DefaultHttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(CREATE_METER_END_POINT_URL);
+        HttpPost post = new HttpPost(MeterUtils.ROOT_URL + "/" + token + "/meters.json" );
         String response;
         JSONObject json = new JSONObject();
         try {
@@ -283,7 +286,6 @@ import android.os.Handler;
                             + "the length of the array is " + numObjectsInArray);
                     myFinalJsnObj = js.getJSONObject(i);
                     holder.put("meter", myFinalJsnObj);
-                    setUploaded(holder);
                     StringEntity se = new StringEntity(holder.toString());
                     post.setEntity(se);
                     se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
@@ -291,14 +293,10 @@ import android.os.Handler;
                     post.setHeader("Content-Type", "application/json");
                     ResponseHandler<String> responseHandler = new BasicResponseHandler();
                     response = client.execute(post,responseHandler);
+                    setUploaded(holder);
                     json = new JSONObject(response);
                     Log.d(TAG, "the returned json object form server is " + json.toString());
-                }
 
-                if (json.getBoolean("success")){
-                    toast("Uploaded your reading to the server");
-                }else{
-                    toastError();
                 }
                 Log.d(TAG, "UPLOADED");
             } catch (HttpResponseException hre) {
@@ -346,7 +344,7 @@ import android.os.Handler;
             }
         });
     }
-    private void toast(final CharSequence msg){
+    private void toast(final CharSequence msg){ //todo move this to utils
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -359,5 +357,3 @@ import android.os.Handler;
         return this;
     }
   }
-
-

@@ -47,6 +47,9 @@ public class MainActivity extends Activity {
             case R.id.action_stats:
                 startActivity(new Intent(this, MeterReadingsDiff.class));
                 return true;
+            case R.id.action_sign_up:
+                startActivity(new Intent(this, SignUpActivity.class));
+                return true;
             case R.id.action_sync_data:
                 if(isConnected()) {
                     startService(new Intent(this, MeterMeasureClient.class));  //probably bad style and code too

@@ -18,6 +18,11 @@
     <string name="close_bracket">)</string>
     <string name="val">100</string>
     <string name="update_data">Update Readings</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="password_confirm">Repeat Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_in">Sign In</string>
 
     <string name="day">Day</string>
     <string name="time">Time</string>
