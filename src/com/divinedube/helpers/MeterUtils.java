@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.Menu;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -28,6 +29,10 @@ public class MeterUtils{
     private int hour;
     private int minute;
     private int dayOfWeek;
+
+    public static boolean stupidValidate(String email){
+        return email.contains("@") && email.contains(".");
+    }
 
     public String getCurrentTime(){
         hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -89,5 +94,7 @@ public class MeterUtils{
     public  String getPassword(SharedPreferences prefs){
         return  prefs.getString("password", "nothing");
     }
+
+
 
 }

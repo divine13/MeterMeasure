@@ -88,7 +88,7 @@ import java.io.IOException;
             StringEntity se = new StringEntity(userJson);
             post.setEntity(se);
             se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json;charset=UTF-8"));
-            post.setHeader("Accept", "application/json");
+            post.setHeader("Accept", "application/json");  //todo move this to Meter utils
             post.setHeader("Content-Type", "application/json");
 
             ResponseHandler<String> responseHandler = new BasicResponseHandler();
@@ -99,7 +99,7 @@ import java.io.IOException;
             if (MeterUtils.easyForSuccessCheck(response)){
                 String token = getRememberTokenFor(response);
 
-                writer.putString("signedIn", "yes" );
+                writer.putString("signedIn", "yes" ); //todo remove this its a duplicate
                 writer.putString("rememberToken", token);
                 boolean pushed = writer.commit();
                 Log.d(TAG, "did i write successfully " +  pushed);

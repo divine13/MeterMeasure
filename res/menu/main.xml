@@ -4,7 +4,7 @@
     <item
         android:id="@+id/action_new"
         android:icon="@android:drawable/ic_menu_add"
-        android:showAsAction="ifRoom"
+        android:showAsAction="always"
         android:title="@string/new_meter_readings_label"
         android:orderInCategory="100"/>
 
@@ -28,13 +28,13 @@
         android:title="@string/about_label"
         android:orderInCategory="300"/>
     <item
-        android:id="@+id/action_sign_up"
-        android:title="@string/sign_up"
-        android:orderInCategory="201"
+        android:id="@+id/main_action_sign_in"
+        android:title="@string/sign_in"
+        android:orderInCategory="400"
         />
     <item
         android:id="@+id/action_sync_data"
-        android:showAsAction="ifRoom"
+        android:showAsAction="never"
         android:title="@string/update_data"
         android:icon="@android:drawable/stat_notify_sync"
         android:orderInCategory="150"/>

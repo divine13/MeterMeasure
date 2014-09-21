@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.divinedube.helpers.MeterUtils;
-import com.divinedube.http.SignInClient;
 import com.divinedube.http.SignUpClient;
 
 import java.util.regex.Pattern;
@@ -27,15 +24,14 @@ public class SignUpActivity extends Activity {
     private static final String TAG = SignUpActivity.class.getSimpleName();
     SharedPreferences preferences;
 
-
-
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up); //todo add bottom action bar for all other actions
+
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
 
     public void signUp(View view){
@@ -70,7 +66,7 @@ public class SignUpActivity extends Activity {
 
         String VALID_EMAIL_REGEX = "/\\A[\\++\\-.]+@[a-z\\d\\-.]+\\.[a-z]+\\z/i";
 
-        EditText EtEmail = (EditText) findViewById(R.id.email);
+        EditText EtEmail = (EditText) findViewById(R.id.email);  //todo refactor this used here a The other Sign in class
         EditText EtPassword = (EditText) findViewById(R.id.password);
         EditText EtPassConfirm = (EditText) findViewById(R.id.password_confirm);
 
@@ -84,12 +80,12 @@ public class SignUpActivity extends Activity {
 
 
 
-        if ( TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passConfirm) || !(stupidValidate(email))  ){
+        if ( TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passConfirm) || !(MeterUtils.stupidValidate(email))  ){
             //just wanted to print more user friendly messages
             if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(passConfirm)) {
                 toast("email password and password confirmation can not be empty");
                 Log.d(TAG, "email password and password confirmation can not be empty");
-            }else if (!stupidValidate(email)){
+            }else if (!MeterUtils.stupidValidate(email)){
               toast("your email is not correct");
             }
            return false;
@@ -112,20 +108,16 @@ public class SignUpActivity extends Activity {
     }
 
 
-    private boolean stupidValidate(String email){
-        return email.contains("@") && email.contains(".");
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_sign_up, menu);
+        getMenuInflater().inflate(R.menu.menu_sign_in, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
-            case R.id.action_sign_up:
+            case R.id.action_sign_in:
                 startActivity(new Intent(this, SignIn.class));
               return true;
             default:

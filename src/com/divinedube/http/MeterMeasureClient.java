@@ -88,7 +88,7 @@ import android.os.Handler;
             Log.d(TAG, "the check num is " + checkNum);
             if (checkNum > 0) {
                  Log.d(TAG, checkNum +" new ones are available");
-                download(PHONE_ID);
+                download(PHONE_ID, token);
                 upload(notUploaded, token);
                 //todo might have to upload here it wont hurt i promise
                  toast("added " + checkNum + " meters readings");
@@ -205,10 +205,10 @@ import android.os.Handler;
          return yes;
     }
 
-    public void download(String phoneID){
+    public void download(String phoneID, String token){
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
-        String url = MeterUtils.ROOT_URL + "/meters/"+ phoneID + "/newer.json";
+        String url = MeterUtils.ROOT_URL +"/"+ token +"/meters/"+ phoneID + "/newer.json";
         String response;
         HttpPut httpPut = new HttpPut(url);
         ResponseHandler<String> stringResponseHandler = new BasicResponseHandler();
