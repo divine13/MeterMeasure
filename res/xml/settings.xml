@@ -9,4 +9,20 @@
         android:id="@+id/settings_set_time"
         android:text=""/>
 
+    <EditTextPreference
+        android:key="meterNumber"
+        android:summary="@string/meter_number_desc"
+        android:id="@+id/meter_number"
+        android:title="Meter number"
+        />
+
+    <EditTextPreference
+        android:key="familyNumber"
+        android:summary="@string/family_number_desc"
+        android:title="number of people you live with"
+        android:id="@+id/family_number"
+        android:inputType="number"
+        android:text=""/>
+
+
 </PreferenceScreen>

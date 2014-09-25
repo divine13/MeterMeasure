@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,14 +55,14 @@ public class SignIn extends Activity{
         writer.putString("password", password);
 
         //do not have to validate if it has content because if it passes this then it is  not empty todo refactor the sign up class
-        if (MeterUtils.stupidValidate(email)){
+        if (MeterUtils.emailValidate(email) && password.length() > 3){
             writer.apply();
             Log.d(TAG, "signing you in");
             Toast.makeText(this, "Signing in", Toast.LENGTH_LONG).show();
             startService(new Intent(this, SignInClient.class));
             startActivity(new Intent(this, MainActivity.class));
         }else {
-            Toast.makeText(this, "Please validate your form", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please check your email and your password", Toast.LENGTH_LONG).show();
         }
 
     }

@@ -41,4 +41,7 @@
         android:text="@string/notes"
         android:textSize="12sp"/>
 
+
+
+
 </RelativeLayout>

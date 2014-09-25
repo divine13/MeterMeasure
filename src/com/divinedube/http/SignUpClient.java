@@ -60,23 +60,25 @@ import java.io.IOException;
     protected void onHandleIntent(Intent intent) {
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        String email = prefs.getString("email", "zero");
+        String email = prefs.getString("email", "zero");  //todo factorise this to use the meter util to get the email
         String password = prefs.getString("password", "zero");
+        String meterNumber  = prefs.getString("meterNumber", "0");
+        String familyNumber = prefs.getString("familyNumber", "0");
 
         if (!(new MeterUtils().isSignedIn(prefs)) ){
             Log.d(TAG, "Signing Up");
-            signUp(email, password);
+            signUp(email, password, meterNumber, familyNumber);
             toast("You are now Signed up");
         }
     }
 
-    private void signUp(String email, String password){
+    private void signUp(String email, String password, String meterNumber, String peopleInHouse){
         Log.d(TAG, "Trying to sign up");
         DefaultHttpClient user = new DefaultHttpClient();
         HttpPost post = new HttpPost(USERS_PATH);
 
 
-        JsonUser userInJson = new JsonUser(email, password);
+        JsonUser userInJson = new JsonUser(email, password, meterNumber, peopleInHouse);
         userInJson.addValues();
 
         Gson json = new Gson();

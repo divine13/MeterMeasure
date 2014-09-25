@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Meter Measure</string>
+    <string name="app_name">Electricity Measure</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
-    <string name="new_meter_readings_label">Add New Meter Readings</string>
+    <string name="new_meter_readings_label">Add new readings</string>
     <string name="about_label">About</string>
-    <string name="about">This app helps you manage and save even more on your prepaid electricity</string>
-    <string name="motivation">Didi motivated worX</string>
-    <string name="time_summary">Just tell us the time at which you always check the meter reading </string>
+    <string name="about">This app helps you manage and save even more on your prepaid electricity.</string>
+    <string name="motivation">didi motivated worX</string>
+    <string name="time_summary">Just tell us the time at which you always check the meter reading.</string>
     <string name="check_time">Check Time</string>
-    <string name="show_your_meter_stats">Stats</string>
+    <string name="show_your_meter_stats">Meter Statics</string>
     <string name="and_string"> and </string>
     <string name="day_one">Day one</string>
     <string name="day_two">Day two</string>
@@ -23,6 +23,11 @@
     <string name="password_confirm">Repeat Password</string>
     <string name="sign_up">Sign Up</string>
     <string name="sign_in">Sign In</string>
+    <string name="family_number_desc">Just tell us how many people you live with.</string>
+    <string name="meter_number_desc">Input your meter number so you always have it with you</string>
+    <string name="meter_number">Meter number.Safe keeping</string>
+    <string name="number_of_people">Number of people in house</string>
+    <string name="not_required">Not required</string>
 
     <string name="day">Day</string>
     <string name="time">Time</string>

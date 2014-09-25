@@ -51,11 +51,12 @@ public class SignInClient extends IntentService {
 
     private void  signIn(SharedPreferences prefs){
 
-        String email =  new MeterUtils().getEmail(prefs);
         String password = new MeterUtils().getPassword(prefs);
-        String resp;
+        String email =  new MeterUtils().getEmail(prefs);
+        String meterNumber = "0"; //no need to work hard with prefs  found a better solution check bottom of this mtd
+        String peopleInHouse = "0";
 
-        JsonUser userBean = new JsonUser(email, password);
+        JsonUser userBean = new JsonUser(email, password, meterNumber, peopleInHouse);
 
         userBean.addValues();
 
@@ -72,21 +73,31 @@ public class SignInClient extends IntentService {
             post.setHeader("Accept", "application/json");  //todo move this to Meter utils repeat
             post.setHeader("Content-Type", "application/json");
             ResponseHandler<String> response = new BasicResponseHandler();
-            resp =  user.execute(post,response);
+           String resp =  user.execute(post,response);
             Log.d(TAG, " the response from server is " + resp);
 
             if (MeterUtils.easyForSuccessCheck(resp)){
                 JSONObject json = new JSONObject(resp).getJSONObject("data").getJSONObject("user");
                 String token = json.getString("remember_token");
+                meterNumber = json.getString("meter_number");
+                peopleInHouse = json.getString("people_in_house");
 
-                Log.d(TAG, "the token is " + token);
+
+
+                Log.d(TAG, "the token is " + token + " the meter number is " + meterNumber +
+                        " there are " + peopleInHouse + "living with this person");
 
                 SharedPreferences.Editor writer = prefs.edit();
+
                 writer.putString("rememberToken", token);
                 writer.putString("signedIn", "yes" );
+                writer.putString("meterNumber", meterNumber); //the number will always either be 0 or the actual number
+                writer.putString("familyNumber", peopleInHouse);
 
                 if (writer.commit())
                     toast("You have signed in now you can refresh");
+            }else{
+                toast("you are not signed in please try again"); //lazy
             }
         }catch (Exception e){ //Bad!
             e.printStackTrace();

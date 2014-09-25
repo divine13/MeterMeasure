@@ -1,5 +1,6 @@
 package com.divinedube.metermeasure;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -29,6 +30,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main); //todo add bottom action bar for all other actions
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+      //  ActionBar
+
     }
 
     @Override
@@ -57,7 +60,7 @@ public class MainActivity extends Activity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_stats:
-                startActivity(new Intent(this, MeterReadingsDiff.class));
+                startActivity(new Intent(this, MeterStatics.class));
                 return true;
             case R.id.main_action_sign_in:
                 if (new MeterUtils().isSignedIn(prefs)) {
@@ -133,15 +136,14 @@ public class MainActivity extends Activity {
         //lol conman
         ConnectivityManager conMan = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = conMan.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()){
-            return true;
-        } else {
-            return false;
-        }
+        return networkInfo != null && networkInfo.isConnected();
     }
 
-    private boolean logout(){
-        SharedPreferences.Editor editor = prefs.edit().remove("rememberToken");
+    private boolean logout(){ //go and leave no trace
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("rememberToken");
+        editor.putString("signedIn", "no");
+        editor.remove("familyNumber");
         return editor.commit();
     }
 }
