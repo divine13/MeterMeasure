@@ -65,7 +65,7 @@
                 android:value="com.divinedube.metermeasure.MainActivity"/>
             </activity>
 
-        <activity android:name=".MainPagerActivity"
+        <activity android:name="com.divinedube.helpers.MainPagerActivity"
             android:label="Pager"/>
 
         <activity
