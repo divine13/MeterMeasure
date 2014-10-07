@@ -1,4 +1,4 @@
-package com.divinedube.metermeasure;
+package com.divinedube.models;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -31,7 +31,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         utils.setUUID(c);
         String sqlReadings = String.format
-             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s boolean default false, unique(%s, %s))",
+             ("create table %s (%s integer primary key autoincrement, %s text, %s text, %s integer, %s text, %s integer, %s boolean default false, %s integer default 0, unique(%s, %s))",
 
                 MeterReadingsContract.TABLE,
                 MeterReadingsContract.Column.ID,
@@ -41,9 +41,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 MeterReadingsContract.Column.NOTE,
                 MeterReadingsContract.Column.CREATED_AT,
                 MeterReadingsContract.Column.UPLOADED,
+                MeterReadingsContract.Column.RECHARGED,
                 MeterReadingsContract.Column.DAY,
                 MeterReadingsContract.Column.TIME
-                );
+                     );
 
         Log.d(TAG,"creating the meter readings db with this " + sqlReadings + " command in the onCreate method(**MAIN_DB**)");
         String sqlStates = String.format //:::

@@ -1,5 +1,6 @@
 package com.divinedube.metermeasure;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
@@ -16,14 +17,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.divinedube.helpers.MeterUtils;
+import com.divinedube.threads.UpdateRecharge;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -31,12 +37,12 @@ import java.util.Calendar;
  */
    //TODO this class is getting too big segment it a bit yeah mate ?
    //TODO might have to spawn some threads for some methods here
-public class NewMeterReadingsActivity extends FragmentActivity implements AdapterView.OnItemSelectedListener { //TODO create another class for this listener
+public class NewMeterReadingsActivity extends FragmentActivity { //TODO create another class for this listener
 
     private final static String TAG = NewMeterReadingsActivity.class.getSimpleName();
 
-    EditText mEditTextDay;
-    EditText mEditTextTime;
+   Button mButtonTextDay;
+    Button mButtonTextTime;
     EditText mEditTextReading;
     EditText mEditTextNote;
 
@@ -51,6 +57,7 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
     Spinner spinner;
     MeterUtils util = new MeterUtils();
 
+    //todo refactor this deeply specially with the class calender
     public void onCreate(Bundle savedInstance){
         super.onCreate(savedInstance);
         setContentView(R.layout.activity_new);
@@ -61,41 +68,47 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
         int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);    // 06
         int month = cal.get(Calendar.MONTH);
 
-        mEditTextDay = (EditText) findViewById(R.id.editTextDay);
-        mEditTextTime = (EditText) findViewById(R.id.editTextTime);
+        mButtonTextDay = (Button) findViewById(R.id.buttonDay);
+        mButtonTextTime = (Button) findViewById(R.id.buttonTime);
         mEditTextReading = (EditText) findViewById(R.id.editTextReading);
         mEditTextReading.requestFocus();
         mEditTextNote = (EditText) findViewById(R.id.editTextNote);
-        spinner = (Spinner) findViewById(R.id.spinner); //todo might just take out all of it just use cal date utils
+//       spinner = (Spinner) findViewById(R.id.spinner); //todo might just take out all of it just use cal date utils
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         String CheckTimeOrCurrent = prefs.getString("time", hour + ":" + minute);  //TODO refactor to use MeterUtils
 
-        mEditTextDay.setText(dayOfMonth + " " + DateUtils.getMonthString(month, DateUtils.LENGTH_SHORT ));  // 26/06
-        mEditTextTime.setText(CheckTimeOrCurrent);
+        mButtonTextDay.setText(formattedDay(dayOfMonth) + " " +
+                cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault()));  // 26/06
+
+        mButtonTextTime.setText(CheckTimeOrCurrent);
         //spinner.getItemAtPosition()
-        ArrayAdapter<CharSequence> spinnerAdapter =
-                ArrayAdapter.createFromResource(this,R.array.week_days_array,android.R.layout.simple_spinner_item);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        ArrayAdapter<CharSequence> spinnerAdapter =
+//                ArrayAdapter.createFromResource(this,R.array.week_days_array,android.R.layout.simple_spinner_item);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        spinner.setAdapter(spinnerAdapter); //i would like this to display the default day which is today
-        spinner.setOnItemSelectedListener(this);
-        AdapterView<?> parent = spinner;
+//        ArrayAdapter<CharSequence> spinnerAdapter =
+//                ArrayAdapter.createFromResource(this,R.array.week_days_array,android.R.layout.simple_spinner_item);
+//        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//
+//        spinner.setAdapter(spinnerAdapter);
+//        spinner.setOnItemSelectedListener(this);
+//        AdapterView<?> parent = spinner;
 
-        parent.setSelection(util.getDayOfWeek() -1);
+//        parent.setSelection(util.getDayOfWeek() -1);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-        //get the item
-        //make sure its a string
-        //add it to day
-
-        Log.d(TAG, "int the method of the onItemSelected ");
-         selectedItem =  parent.getItemAtPosition(position).toString();
-        Toast.makeText(this,"You Selected " + selectedItem , Toast.LENGTH_LONG).show();
-    }
+//    @Override
+//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//
+//        //get the item
+//        //make sure its a string
+//        //add it to day
+//
+//        Log.d(TAG, "int the method of the onItemSelected ");
+//         selectedItem =  parent.getItemAtPosition(position).toString();
+//        Toast.makeText(this,"You Selected " + selectedItem , Toast.LENGTH_LONG).show();
+//    }
 
     public void saveDatas(MenuItem item) {
         save();
@@ -134,13 +147,51 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
                 twoDecMin = minAsS;
             }
 
-            mEditTextTime.setText(hourOfDay + ":" + twoDecMin);
+            mButtonTextTime.setText(hourOfDay + ":" + twoDecMin);
         }
 
     }
+
+
     public void showTimePickerDialog(View view){
         DialogFragment newFragment = new TimePickerFragment();
-        newFragment.show(getFragmentManager(),"time picker");
+        newFragment.show(getFragmentManager(),"timePicker");
+    }
+
+    private class DatePickerDialogFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener{
+
+        public Dialog onCreateDialog(Bundle savedInstance){
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int monthOfYear = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            return new DatePickerDialog(getActivity(),this, year, monthOfYear,day );
+        }
+
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+
+            String sMonthOfYear = MeterUtils.intMonthToString(monthOfYear);  //todo refactor this and remove the deprecated above
+
+            String sDayOfMonth = formattedDay(dayOfMonth);
+            Log.d(TAG, "the month is " + sMonthOfYear);
+
+            mButtonTextDay.setText(sDayOfMonth + " " + sMonthOfYear);
+        }
+    }
+
+    public void showDatePickerDialog(View view){
+        DatePickerDialogFragment datePickerDialogFragment = new DatePickerDialogFragment();
+        datePickerDialogFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    private String formattedDay(int dayOfMonth){
+        if (dayOfMonth < 10){
+            return  "0" + dayOfMonth;
+        }else {
+           return  "" + dayOfMonth;
+        }
     }
 
     //
@@ -148,39 +199,25 @@ public class NewMeterReadingsActivity extends FragmentActivity implements Adapte
        save();
     }
 
-    //todo a smooth experience remember to run this on its own thread
     private void save(){
         try {
-            day =  mEditTextDay.getText().toString() + " " + selectedItem;
-            time = mEditTextTime.getText().toString();
+            day =  mButtonTextDay.getText().toString();
+            time = mButtonTextTime.getText().toString();
             reading = Double.valueOf(mEditTextReading.getText().toString());
             note = mEditTextNote.getText().toString();
-
-            values = new ContentValues();
-            // values.put(MeterReadingsContract.Column.ID, newRowId);
-            values.put(MeterReadingsContract.Column.DAY, day);
-            values.put(MeterReadingsContract.Column.TIME, time);
-            values.put(MeterReadingsContract.Column.READING, reading);
-            values.put(MeterReadingsContract.Column.NOTE, note);
-            values.put(MeterReadingsContract.Column.CREATED_AT, System.currentTimeMillis());
-
-            // todo this must be done in the service create method with params = (uri, values)
-            getContentResolver().insert(MeterReadingsContract.CONTENT_URI, values);
-
-            Log.d(TAG, "inserting "  + time + reading + note + " into db " +
-                    MeterReadingsContract.TABLE + " at "+ System.currentTimeMillis());
-            //newRowId = db.insert(MeterReadingsContract.TABLE, null, values);
+            UpdateRecharge updateRecharge = new UpdateRecharge(this, reading, day,time, note);
+            updateRecharge.start(); //stating the thread. could have implemented this better  but just want to play with threads
             Toast.makeText(this, "Your Meter Readings have been saved", Toast.LENGTH_LONG).show();
             finish();
-        }catch (Exception e){
+        }catch (NumberFormatException e){
             e.printStackTrace();
-            Toast.makeText(this, "Eish!.Could not save Meter Readings", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Eish! Please add the reading before saving.", Toast.LENGTH_LONG).show();
         }
     }
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-            Log.d(TAG, "onNothingSelected was called");
-    }
+   // @Override
+//    public void onNothingSelected(AdapterView<?> parent) {
+//            Log.d(TAG, "onNothingSelected was called");
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,4 +1,4 @@
-package com.divinedube.metermeasure;
+package com.divinedube.models;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -11,7 +11,7 @@ import android.provider.BaseColumns;
 public class MeterReadingStatsContract {
 
     public static final String TABLE = "meter_stats";
-    public static final String STATS_AUTHORITY = "com.divinedube.metermeasure.MeterReadingStatsProvider";
+    public static final String STATS_AUTHORITY = "com.divinedube.models.MeterReadingStatsProvider";
     public static final Uri STATES_CONTENT_URI = Uri.parse("content://" + STATS_AUTHORITY + "/" + TABLE);
 
 

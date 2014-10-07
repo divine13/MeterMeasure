@@ -1,4 +1,4 @@
-package com.divinedube.metermeasure;
+package com.divinedube.models;
 
 import android.content.ContentUris;
 import android.net.Uri;
@@ -17,7 +17,7 @@ public class MeterReadingsContract {
     public static final String NORMAL_SORT_ORDER = Column.CREATED_AT + " ASC"; //TODO sort the ordering check in book
     public static final int DB_VERSION = 1;
     public static final String DROP_TABLE = "drop table if exists " + TABLE ;
-    public static final String AUTHORITY = "com.divinedube.metermeasure.MeterRecordingsProvider";
+    public static final String AUTHORITY = "com.divinedube.models.MeterRecordingsProvider";
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/" + TABLE);
     public static final String READING_TYPE_ITEM =
             "vnd.android.cursor.type/vnd.com.divinedube.metermeasure.provider.meter";
@@ -37,5 +37,6 @@ public class MeterReadingsContract {
         public static final String READING = "reading";
         public static final String NOTE = "note";
         public static final String UPLOADED = "uploaded";
+        public static final String RECHARGED = "recharged";
     }
 }

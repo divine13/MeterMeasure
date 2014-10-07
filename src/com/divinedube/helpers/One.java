@@ -20,7 +20,6 @@ public class One extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
        View rootView =  inflater.inflate(R.layout.fagment_one, container, false);
         Bundle args = getArguments();
-        ((TextView) rootView.findViewById(R.id.button)).setText(Integer.toString(args.getInt(TAG)));
         return rootView;
     }
 }

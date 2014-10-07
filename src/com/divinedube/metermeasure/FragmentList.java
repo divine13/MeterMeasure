@@ -6,7 +6,9 @@ import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.util.Log;
 
-import android.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter;
+
+import com.divinedube.models.MeterReadingsContract;
 
 /**
  * Created by Divine Dube on 2014/06/29.
@@ -22,6 +24,7 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
             MeterReadingsContract.Column.READING,
             MeterReadingsContract.Column.NOTE
     };
+
     private static final int[] TO = {
             android.R.id.empty,
             R.id.list_item_textViewDayMain,
@@ -29,9 +32,9 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
             R.id.list_item_textViewReadingMain,
             R.id.list_item_textViewNoteMain
     };
+
     private static final int LOADER_ID = 36;
     private SimpleCursorAdapter mAdapter;
-    private Cursor mCursor;
 
     @Override
     public void onActivityCreated(Bundle savedInstance){
@@ -42,6 +45,7 @@ public class FragmentList extends ListFragment implements LoaderManager.LoaderCa
         setListAdapter(mAdapter);
 
         getLoaderManager().initLoader(LOADER_ID,null,this);
+
     }
 
     /**

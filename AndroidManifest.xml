@@ -16,17 +16,17 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <provider
-            android:authorities="com.divinedube.metermeasure.MeterRecordingsProvider"
-            android:name="com.divinedube.metermeasure.MeterRecordingsProvider"
+            android:authorities="com.divinedube.models.MeterRecordingsProvider"
+            android:name="com.divinedube.models.MeterRecordingsProvider"
             android:exported="false"/>
         <provider
-            android:authorities="com.divinedube.metermeasure.MeterReadingStatsProvider"
-            android:name="com.divinedube.metermeasure.MeterReadingStatsProvider"
+            android:authorities="com.divinedube.models.MeterReadingStatsProvider"
+            android:name="com.divinedube.models.MeterReadingStatsProvider"
             android:exported="false"
             />
         <provider
-            android:authorities="com.divinedube.metermeasure.ProcessedDataProvider"
-            android:name="com.divinedube.metermeasure.ProcessedDataProvider"
+            android:authorities="com.divinedube.models.ProcessedDataProvider"
+            android:name="com.divinedube.models.ProcessedDataProvider"
             android:exported="false"/>
 
         <activity
@@ -39,7 +39,6 @@
         </activity>
         <activity android:name=".NewMeterReadingsActivity"
             android:label="@string/new_meter_readings_label"
-            android:parentActivityName=".MainActivity"
            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -77,6 +76,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.divinedube.metermeasure.MainActivity"/>
             </activity>
+        <activity
+            android:name="com.divinedube.helpers.Main"
+            android:label="main" />
 
         <service android:name="com.divinedube.http.MeterMeasureClient" />
         <service android:name="com.divinedube.http.SignUpClient"/>

@@ -99,10 +99,10 @@ public class SignUpActivity extends Activity {
             }
            return false;
         }else if (password.length() < 4 || passConfirm.length() < 4 || familyPeopleNumber < 1
-                || !(isMeterNumberAcceptable(meterNumber)) ){ //the fail will be here
+                || !(MeterUtils.isMeterNumberAcceptable(meterNumber)) ){ //the fail will be here
             if (familyPeopleNumber < 1){
                 toast("number of people in family must be more than 1 ");
-            }else if(!(isMeterNumberAcceptable(meterNumber))){
+            }else if(!(MeterUtils.isMeterNumberAcceptable(meterNumber))){
                 toast("Meter number must be equal to 11 digits or just leave it blank.");
             }else {
                 toast("your password must be more than 4 characters  ");
@@ -118,14 +118,6 @@ public class SignUpActivity extends Activity {
             return false;
         }
 
-    }
-
-    private boolean isStringNumberAndLessThan(String number, int compareInt){ //no need for this but....
-        if (MeterUtils.isStringNumber(number)){
-            int numberAsInt = Integer.valueOf(number);
-            return numberAsInt < compareInt;
-        }else
-            return false;
     }
 
 
@@ -156,11 +148,6 @@ public class SignUpActivity extends Activity {
         }
 
         return number;
-    }
-
-    private boolean isMeterNumberAcceptable(String number){
-
-        return number.length() == 0 || number.length() == 11;
     }
 
     @Override

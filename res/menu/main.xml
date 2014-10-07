@@ -15,12 +15,12 @@
         android:title="@string/action_settings"
        />
 
-    <item
-        android:id="@+id/action_stats"
-        android:title="@string/show_your_meter_stats"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:showAsAction="ifRoom"
-        android:orderInCategory="150"/>
+    <!--<item-->
+        <!--android:id="@+id/action_stats"-->
+        <!--android:title="@string/show_your_meter_stats"-->
+        <!--android:icon="@android:drawable/ic_menu_info_details"-->
+        <!--android:showAsAction="ifRoom"-->
+        <!--android:orderInCategory="150"/>-->
 
     <item
         android:id="@+id/action_about"

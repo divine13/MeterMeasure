@@ -10,7 +10,7 @@
     <string name="motivation">didi motivated worX</string>
     <string name="time_summary">Just tell us the time at which you always check the meter reading.</string>
     <string name="check_time">Check Time</string>
-    <string name="show_your_meter_stats">Meter Statics</string>
+    <string name="show_your_meter_stats">Meter Statistics</string>
     <string name="and_string"> and </string>
     <string name="day_one">Day one</string>
     <string name="day_two">Day two</string>
@@ -29,6 +29,15 @@
     <string name="number_of_people">Number of people in house</string>
     <string name="not_required">Not required</string>
 
+    <string name="recharged">Recharged</string>
+    <string name="recharged_statistics">Recharged Statistics</string>
+
+
+    <string name="got">Got</string>
+    <string name="last_three_readings">Last 3 Readings</string>
+    <string name="place_holder">11 Sept and 12 Sept</string>
+
+
     <string name="day">Day</string>
     <string name="time">Time</string>
     <string name="reading">Reading</string>
@@ -42,5 +51,12 @@
 
 
     <string name="button_save">Save</string>
+    <string name="last_three_days">Last three days</string>
+    <string name="ago">recharged with 70, 7 days ago</string>
+    <string name="and_got">recieved 100kwh</string>
+    <string name="and_finish_date">will finish in 10 days</string>
+    <string name="recharged_statistics_usages">Your Usages</string>
+    <string name="usage_state">You using above normal</string>
+    <string name="usage_this_month">you have used 300 in the past 31 days</string>
 
 </resources>

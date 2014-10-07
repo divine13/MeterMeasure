@@ -1,4 +1,4 @@
-package com.divinedube.metermeasure;
+package com.divinedube.models;
 
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
 public class ProcessedDataContract  {
 
     public static final String TABLE = "p_data";
-    public static final String P_DATA_AUTHORITY = "com.divinedube.metermeasure.ProcessedDataProvider";
+    public static final String P_DATA_AUTHORITY = "com.divinedube.models.ProcessedDataProvider";
     public static final Uri P_DATA_CONTENT_URI = Uri.parse("content://" + P_DATA_AUTHORITY + "/" + TABLE);
 
 

@@ -3,6 +3,7 @@ package com.divinedube.metermeasure;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,18 +12,26 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.divinedube.helpers.MeterUtils;
+import com.divinedube.helpers.MyPagerAdapter;
 import com.divinedube.http.MeterMeasureClient;
 
-public class MainActivity extends Activity {
+import java.util.List;
+import java.util.Vector;
+
+public class MainActivity extends FragmentActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     SharedPreferences prefs;
+    private ViewPager mPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +39,77 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main); //todo add bottom action bar for all other actions
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-      //  ActionBar
+        this.initialisePaging();  //**init**
 
+        ActionBar actionBar = getActionBar(); //todo put it in method that gives back actionbar
+        if (actionBar != null) {
+            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        }
+
+        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+            @Override
+            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                mPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+
+            @Override
+            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+
+            }
+        };
+
+        if (actionBar != null) {
+            actionBar.addTab(actionBar.newTab().setText("Readings").setTabListener(tabListener));
+            actionBar.addTab(actionBar.newTab().setText("Stats").setTabListener(tabListener));
+        }
+
+        mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                if (getActionBar() != null) {
+                    getActionBar().setSelectedNavigationItem(position);
+                }
+            }
+        });
+    }
+
+    private void initialisePaging() {
+        List<Fragment> fragments = new Vector<Fragment>();
+        fragments.add(Fragment.instantiate(this, FragmentList.class.getName()));
+        fragments.add(Fragment.instantiate(this, MeterReadingsDiffFragment.class.getName()));
+
+        MyPagerAdapter myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager(), fragments);
+        mPager = (ViewPager) findViewById(R.id.main_pager);
+
+        mPager.setAdapter(myPagerAdapter);
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String meterNumber =  prefs.getString("meterNumber", "no meter number set").trim();
+        String family = prefs.getString("familyNumber", "0").trim();
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null){ //support for older devices
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setSubtitle(meterNumber);
+        }
+
+        if (!(MeterUtils.isMeterNumberAcceptable(meterNumber)) ){
+            MeterUtils.toast(this, "It seems like the meter number that you have set is not correct.Please check");
+        }
+
+        if (MeterUtils.isStringNumberLessThan(family, 1)){
+            MeterUtils.toast(this, "People in family must be more than 0");
+        }
     }
 
     @Override
@@ -59,17 +137,11 @@ public class MainActivity extends Activity {
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
-            case R.id.action_stats:
-                startActivity(new Intent(this, MeterStatics.class));
-                return true;
+//            case R.id.action_stats:
+//                startActivity(new Intent(this, MeterStatics.class));
+//                return true;
             case R.id.main_action_sign_in:
                 if (new MeterUtils().isSignedIn(prefs)) {
-//                    Toast.makeText(this, "You are already signed so just refresh your readings", Toast.LENGTH_LONG).show();
-//                    Log.d(TAG, "you already in");
-//                    return false;
-//                    Menu menu = (Menu) findViewById(R.id.main_action_sign_in);
-//                    menu. wrong man
-
                     logoutConfirmDialog();
                     return true;
                 }else{
@@ -77,11 +149,13 @@ public class MainActivity extends Activity {
                     Log.d(TAG, "you signing so we going to take you there");
                     return true;
                 }
-            case R.id.action_sync_data:
-                if(isConnected()) {
+            case R.id.action_sync_data: //todo must start this automatically every 24 hours
+                if(isConnected() && new MeterUtils().isSignedIn(prefs)) {
                     startService(new Intent(this, MeterMeasureClient.class));  //probably bad style and code too
-                }else {
+                }else if (!(isConnected())){
                     Toast.makeText(this, "please connect to the Internet to updating readings", Toast.LENGTH_LONG).show();
+                }else {
+                    MeterUtils.toast(this, "Please Sign in to update readings");
                 }
             default:
                 return false;

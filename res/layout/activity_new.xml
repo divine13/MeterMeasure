@@ -19,23 +19,19 @@
         android:layout_alignParentTop="true"
         android:textSize="40sp"
         />
-    <EditText
-        android:id="@+id/editTextDay"
-        android:layout_width="wrap_content"
+
+    <Button
+        style="@android:style/Widget.EditText"
+        android:id="@+id/buttonDay"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:hint="@string/edit_text_day_hint"
         android:layout_above="@+id/textViewTime"
-        android:layout_alignLeft="@+id/editTextTime"
-        android:layout_alignStart="@+id/editTextTime" />
+        android:layout_alignLeft="@+id/buttonTime"
+        android:layout_alignStart="@+id/buttonTime"
+        android:onClick="showDatePickerDialog"/>
      <!--SET DATE PICKER  -->
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_alignEnd="@id/textViewDay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/editTextDay"
-        android:layout_alignParentRight="true"
-        />
+
 
     <TextView
         android:id="@+id/textViewTime"
@@ -47,16 +43,16 @@
         android:textSize="40sp"
         android:layout_below="@id/textViewDay"
         />
-    <EditText
-        android:id="@+id/editTextTime"
+    <Button
+        android:id="@+id/buttonTime"
+        style="@android:style/Widget.EditText"
         android:layout_width="200dp"
         android:layout_height="40dp"
         android:layout_alignParentTop="false"
         android:layout_alignParentRight="true"
         android:layout_alignBaseline="@id/textViewTime"
         android:hint="@string/edit_text_time_hint"
-        android:layout_below="@id/editTextDay"
-        android:inputType="time"
+        android:layout_below="@id/buttonDay"
         android:onClick="showTimePickerDialog"
         />
 
@@ -78,7 +74,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignBaseline="@id/textViewReading"
         android:hint="@string/edit_text_readings_hint"
-        android:layout_below="@id/editTextDay"
+        android:layout_below="@id/buttonDay"
         android:inputType="numberDecimal"
 
         />

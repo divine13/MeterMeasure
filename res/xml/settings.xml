@@ -13,6 +13,7 @@
         android:key="meterNumber"
         android:summary="@string/meter_number_desc"
         android:id="@+id/meter_number"
+        android:inputType="number"
         android:title="Meter number"
         />
 

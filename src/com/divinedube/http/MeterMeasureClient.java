@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.divinedube.metermeasure.BagOfValuesArray;
 
-import com.divinedube.metermeasure.MeterReadingsContract;
+import com.divinedube.models.MeterReadingsContract;
 import com.divinedube.helpers.MeterUtils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

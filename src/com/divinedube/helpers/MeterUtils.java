@@ -2,9 +2,13 @@ package com.divinedube.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.divinedube.models.MeterReadingsContract;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -20,11 +24,13 @@ public class MeterUtils {
 
     //    public static final String ROOT_URL = "http://sleepy-scrubland-6302.herokuapp.com";
     public static final String ROOT_URL = "http://192.168.56.1:3000";
+
     //  public static final String CREATE_METER_END_POINT_URL = ROOT_URL + "/meters.json";
 
     private static String TAG = MeterUtils.class.getSimpleName();
 
-    Calendar calendar = Calendar.getInstance();
+
+    Calendar calendar = Calendar.getInstance(); //not perfect not chained good
     private int hour;
     private int minute;
     private int dayOfWeek;
@@ -33,6 +39,19 @@ public class MeterUtils {
         String VALID_EMAIL_REGEX = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
         Pattern pattern = Pattern.compile(VALID_EMAIL_REGEX);
         return pattern.matcher(email).matches();
+    }
+
+    public static boolean isMeterNumberAcceptable(String number){
+        return isStringNumber(number) && (number.trim().length() == 0 || number.trim().length() == 11);
+    }
+
+
+    public static boolean isStringNumberLessThan(String number, int compareInt) throws NumberFormatException{ //no need for this but....
+        if (isStringNumber(number)){
+            int numberAsInt = Integer.valueOf(number);
+            return numberAsInt < compareInt;
+        }else
+            return false;
     }
 
     public String getCurrentTime() {
@@ -100,14 +119,67 @@ public class MeterUtils {
     }
 
     public static boolean isStringNumber(String number) {
-        String emailValidator = "\\d+";
 
-        Pattern pattern = Pattern.compile(emailValidator);
+        if ((number == null)) {
+            return false;
+        } else {
+            String validator = "\\d+";
 
-        Matcher m = pattern.matcher(number);
+            Pattern pattern = Pattern.compile(validator);
 
-        return m.matches();
+            Matcher m = pattern.matcher(number);
+
+            return m.matches();
+        }
     }
+
+    public static void toast(final Context context, final CharSequence msg){
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public static String intMonthToString(int month){
+        String[] months ={
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+        "UnDec"}; //for leap years
+
+        return months[month];
+    }
+
+    static String[]  daysOfWeek = {
+            "Sun","Mon","Tue","Wed","Thu","Fri", "Sat"
+    };
+    public static String intDayToString(int day){
+
+        return daysOfWeek[day];
+    }
+    /**
+      this would give the days in the range of 0-6 0 = Sun and 6= Sat*/
+    public static int monthDaysToIntWeekDays(String dayOfMonth){
+        int i;
+        for (i=0; i < daysOfWeek.length; i++){
+            if (dayOfMonth.equals(daysOfWeek[i])){
+               break;
+            }
+        }
+        return  i;
+    }
+
 
 
 }

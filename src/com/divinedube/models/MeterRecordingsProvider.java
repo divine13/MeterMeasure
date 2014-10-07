@@ -1,4 +1,4 @@
-package com.divinedube.metermeasure;
+package com.divinedube.models;
 
 import android.content.ContentProvider;
 import android.content.ContentUris;
