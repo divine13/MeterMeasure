@@ -10,13 +10,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -25,10 +22,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.divinedube.helpers.MeterUtils;
-import com.divinedube.threads.UpdateRecharge;
+import com.divinedube.threads.SaveNewReadings;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 
@@ -205,8 +201,8 @@ public class NewMeterReadingsActivity extends FragmentActivity { //TODO create a
             time = mButtonTextTime.getText().toString();
             reading = Double.valueOf(mEditTextReading.getText().toString());
             note = mEditTextNote.getText().toString();
-            UpdateRecharge updateRecharge = new UpdateRecharge(this, reading, day,time, note);
-            updateRecharge.start(); //stating the thread. could have implemented this better  but just want to play with threads
+            SaveNewReadings saveNewReadings = new SaveNewReadings(this, reading, day,time, note);
+            saveNewReadings.start(); //stating the thread. could have implemented this better  but just want to play with threads
             Toast.makeText(this, "Your Meter Readings have been saved", Toast.LENGTH_LONG).show();
             finish();
         }catch (NumberFormatException e){

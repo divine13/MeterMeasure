@@ -8,22 +8,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:background="#fff9f9f9"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingTop="1dp"
+
         android:orientation="vertical"
         >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:background="@android:color/holo_blue_dark"
+
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+
             android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingStart="15dp"
-            android:paddingRight="15dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="1dp"
+            android:paddingStart="1dp"
+            android:paddingRight="1dp"
+
             >
 
             <TextView
@@ -33,20 +39,22 @@
                 android:text="@string/show_your_meter_stats"
                 android:paddingTop="5dp"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="16sp"
+                android:textColor="@android:color/holo_blue_dark"/>
 
             <TextView
-                android:textColor="#ff676767"
+                android:textColor="@android:color/holo_green_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/last_three_days"
-                android:paddingBottom="2dp"/>
+                android:paddingBottom="2dp"
+                />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/holo_blue_dark"
+               />
 
             <TextView
                 android:id="@+id/reading_one"
@@ -55,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/val"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="15sp"/>
 
 
             <TextView
@@ -73,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/val"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="15sp"/>
 
 
             <TextView
@@ -91,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/val"
                 android:textStyle="bold"
-                android:textSize="20sp"/>
+                android:textSize="15sp"/>
 
 
             <TextView
@@ -105,15 +113,29 @@
 
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:background="#ffeeeeee"
+            android:shadowDx="@android:integer/config_longAnimTime"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/holo_green_dark"
+            android:shadowDx="@android:integer/config_longAnimTime"
+        />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+
             android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingStart="15dp"
-            android:paddingRight="15dp"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:paddingLeft="1dp"
+            android:paddingStart="1dp"
+            android:paddingRight="1dp"
+
             >
 
             <TextView
@@ -121,9 +143,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/recharged_statistics"
+                android:textColor="#ff70db57"
                 android:paddingTop="5dp"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="16sp"
                 android:paddingBottom="2dp"/>
 
             <TextView
@@ -157,15 +180,29 @@
                 android:paddingBottom="5dp"/>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:background="#ffeeeeee"
+            android:shadowDx="@android:integer/config_longAnimTime"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/holo_red_dark"
+            android:shadowDx="@android:integer/config_longAnimTime"
+            />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
+
             android:orientation="vertical"
-            android:paddingLeft="15dp"
-            android:paddingStart="15dp"
-            android:paddingRight="15dp"
+            android:paddingLeft="1dp"
+            android:paddingStart="1dp"
+            android:paddingRight="1dp"
             >
 
             <TextView
@@ -174,15 +211,16 @@
                 android:layout_height="wrap_content"
                 android:text="@string/recharged_statistics_usages"
                 android:paddingTop="5dp"
+                android:textColor="@android:color/holo_red_dark"
                 android:textStyle="bold"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:paddingBottom="2dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
 
-                android:background="@android:color/darker_gray"/>
+                android:background="@android:color/holo_red_dark"/>
 
             <TextView
                 android:id="@+id/usage_above"
@@ -202,6 +240,14 @@
 
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:background="#ffeeeeee"
+
+            />
 
     </LinearLayout>
 

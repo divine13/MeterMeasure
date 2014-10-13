@@ -6,8 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="new_meter_readings_label">Add new readings</string>
     <string name="about_label">About</string>
-    <string name="about">This app helps you manage and save even more on your prepaid electricity.</string>
-    <string name="motivation">didi motivated worX</string>
+    <string name="about">This app helps you manage and save even more on your prepaid electricity.Copyright © 2014, <b>didi motivated workX</b> </string>
+    <string name="motivation">didi motivated workX</string>
     <string name="time_summary">Just tell us the time at which you always check the meter reading.</string>
     <string name="check_time">Check Time</string>
     <string name="show_your_meter_stats">Meter Statistics</string>
@@ -51,9 +51,9 @@
 
 
     <string name="button_save">Save</string>
-    <string name="last_three_days">Last three days</string>
+    <string name="last_three_days">Usage of last 3 days</string>
     <string name="ago">recharged with 70, 7 days ago</string>
-    <string name="and_got">recieved 100kwh</string>
+    <string name="and_got">received 100kwh</string>
     <string name="and_finish_date">will finish in 10 days</string>
     <string name="recharged_statistics_usages">Your Usages</string>
     <string name="usage_state">You using above normal</string>

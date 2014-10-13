@@ -1,5 +1,6 @@
 package com.divinedube.metermeasure;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.preference.PreferenceManager;
@@ -32,6 +34,7 @@ public class MainActivity extends FragmentActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     SharedPreferences prefs;
     private ViewPager mPager;
+    ActionBar actionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +44,33 @@ public class MainActivity extends FragmentActivity {
 
         this.initialisePaging();  //**init**
 
-        ActionBar actionBar = getActionBar(); //todo put it in method that gives back actionbar
-        if (actionBar != null) {
-            actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        }
+         //todo put it in method that gives back actionbar
+       if (getActionBar() != null) {
+           actionBar = getActionBar();
+           actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 
-        ActionBar.TabListener tabListener = new ActionBar.TabListener() {
-            @Override
-            public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-                mPager.setCurrentItem(tab.getPosition());
-            }
 
-            @Override
-            public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+           ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+               @Override
+               public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+                   mPager.setCurrentItem(tab.getPosition(), true);
+               }
 
-            }
+               @Override
+               public void onTabUnselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
-            @Override
-            public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+               }
 
-            }
-        };
+               @Override
+               public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
 
-        if (actionBar != null) {
-            actionBar.addTab(actionBar.newTab().setText("Readings").setTabListener(tabListener));
-            actionBar.addTab(actionBar.newTab().setText("Stats").setTabListener(tabListener));
-        }
+               }
+           };
+
+           actionBar.addTab(actionBar.newTab().setText("Readings").setTabListener(tabListener));
+           actionBar.addTab(actionBar.newTab().setText("OverView").setTabListener(tabListener));
+           actionBar.addTab(actionBar.newTab().setText("Stats").setTabListener(tabListener));
+       }
 
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
             @Override
@@ -76,12 +80,15 @@ public class MainActivity extends FragmentActivity {
                 }
             }
         });
+
+
     }
 
     private void initialisePaging() {
         List<Fragment> fragments = new Vector<Fragment>();
         fragments.add(Fragment.instantiate(this, FragmentList.class.getName()));
-        fragments.add(Fragment.instantiate(this, MeterReadingsDiffFragment.class.getName()));
+        fragments.add(Fragment.instantiate(this, FragmentAverage.class.getName()));
+        fragments.add(Fragment.instantiate(this, MeterReadingsDiffFragment.class.getName())); //todo change to fragmentReadingDiff
 
         MyPagerAdapter myPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager(), fragments);
         mPager = (ViewPager) findViewById(R.id.main_pager);
@@ -97,8 +104,9 @@ public class MainActivity extends FragmentActivity {
         String meterNumber =  prefs.getString("meterNumber", "no meter number set").trim();
         String family = prefs.getString("familyNumber", "0").trim();
 
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null){ //support for older devices
+
+        if (getActionBar() != null){ //support for older devices
+            ActionBar  actionBar = getActionBar();
             actionBar.setDisplayShowTitleEnabled(true);
             actionBar.setSubtitle(meterNumber);
         }

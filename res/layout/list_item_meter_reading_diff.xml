@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
     >
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
@@ -12,6 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+
     >
 
     <TextView
@@ -19,42 +16,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/and_string"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-       />
+        android:layout_toEndOf="@+id/close_bracket"
+        android:layout_alignBaseline="@+id/close_bracket"
+        android:layout_alignBottom="@+id/close_bracket"
+        android:layout_toRightOf="@+id/close_bracket" />
 
 
     <TextView
         android:id="@+id/close_bracket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/for_diff_day_one"
         android:text="@string/close_bracket"
-        android:paddingRight="4dp"/>
+        android:paddingRight="4dp"
+        android:layout_toEndOf="@+id/list_item_val0"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/list_item_val0"
+        android:layout_marginLeft="12dp" />
 
     <TextView
         android:id="@+id/list_item_val0"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/close_bracket"
         android:text="@string/val"
-        />
+        android:layout_toEndOf="@+id/open0_bracket"
+        android:layout_alignBaseline="@+id/close_bracket"
+        android:layout_alignBottom="@+id/close_bracket"
+        android:layout_toRightOf="@+id/open0_bracket"
+        android:layout_marginLeft="10dp" />
 
     <TextView
         android:id="@+id/open0_bracket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/list_item_val0"
         android:text="@string/open_bracket"
 
-        />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/list_item_day_one"
+        android:layout_toEndOf="@+id/list_item_day_one" />
     <TextView
         android:id="@+id/list_item_day_one"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/day_one"
-        android:layout_above="@+id/list_item_reading"
-        android:layout_toLeftOf="@+id/open0_bracket" />
+        android:layout_alignBaseline="@+id/open0_bracket"
+        android:layout_alignBottom="@+id/open0_bracket"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+         />
 
     <TextView
         android:id="@+id/list_item_day_two"
@@ -68,27 +76,35 @@
         android:id="@+id/open_bracket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/list_item_day_two"
         android:text="@string/open_bracket"
 
-       />
+        android:layout_toEndOf="@+id/list_item_day_two"
+        android:layout_alignBaseline="@+id/list_item_day_two"
+        android:layout_alignBottom="@+id/list_item_day_two"
+        android:layout_toRightOf="@+id/list_item_day_two" />
 
     <TextView
         android:id="@+id/list_item_val"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/open_bracket"
         android:text="@string/val"
 
-        />
+        android:layout_alignBaseline="@+id/textView"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_toRightOf="@+id/open_bracket"
+        android:layout_toEndOf="@+id/open_bracket"
+        android:layout_marginLeft="11dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/list_item_val"
         android:text="@string/close_bracket"
 
-        />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/list_item_val"
+        android:layout_toEndOf="@+id/list_item_val"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/textView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -96,8 +112,20 @@
         android:layout_below="@id/for_diff_day_one"
         android:textStyle="bold"
         android:text="@string/reading"
-        android:textSize="18sp"
+        android:textSize="13sp"
         android:id="@+id/list_item_reading" />
+
+    <TextView
+        android:padding="1dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/list_item_recharged"
+        android:background="@android:color/holo_green_light"
+        android:textColor="@android:color/white"
+        android:text="@string/recharged"
+        android:textSize="12sp"
+        android:layout_alignBaseline="@id/list_item_reading"
+        android:layout_alignParentRight="true"/>
 
 </RelativeLayout>
 </LinearLayout>

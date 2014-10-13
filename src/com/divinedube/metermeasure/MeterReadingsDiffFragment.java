@@ -37,7 +37,6 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
     double reading;
     String defaultTime;
     String day;
-    String currentTime;
     Cursor mCursor;
     SimpleCursorAdapter mAdapter;
     String s = "";
@@ -52,7 +51,9 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
             ProcessedDataContract.Column.DAY_2,
             ProcessedDataContract.Column.READING_FOR_DAY_1,
             ProcessedDataContract.Column.READING_FOR_DAY_2,
-            ProcessedDataContract.Column.DIFFERENCE
+            ProcessedDataContract.Column.DIFFERENCE,
+            ProcessedDataContract.Column.RECHARGED
+
     };
 
     private static final int[] TO = {
@@ -61,7 +62,8 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
             R.id.list_item_day_two,
             R.id.list_item_val0,
             R.id.list_item_val,
-            R.id.list_item_reading
+            R.id.list_item_reading,
+            R.id.list_item_recharged
     };
 
     private static final int LOADER_ID = 37;
@@ -69,6 +71,7 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
 
     @Override
     public void onResume() {
+
         super.onResume();
         prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
@@ -84,7 +87,7 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
             Log.d(TAG, "the is not empty");
             s = "you have added check time and then now";
             Toast.makeText(getActivity(), "Generated your meter stats using  this " + defaultTime + "  time",
-                    Toast.LENGTH_LONG).show();
+                    Toast.LENGTH_SHORT).show();
 
             String[] selectionArgs = {defaultTime};      //*** Didi motivated worX ***//
 
@@ -117,7 +120,7 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
             Log.d(TAG, "there are records at the set time");
             Log.d(TAG, "will insert " + values.size() + " values");
 
-            Toast.makeText(getActivity(), "number of rows returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
+//            Toast.makeText(getActivity(), "number of rows returned: " + noC, Toast.LENGTH_LONG).show(); //Todo remove this in production
 
             Cursor statsCursor = getActivity().getContentResolver().query
                     (MeterReadingStatsContract.STATES_CONTENT_URI, null, null, null, null);// todo make better please
@@ -154,10 +157,17 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
                 processedValues.put(ProcessedDataContract.Column.READING_FOR_DAY_2, val2);
                 Log.d(TAG, "the val is " + val);
                 Log.d(TAG, "the val2 is " + val2);
+                double origRechargeValue = val;
                 val -= val2; //bad vars
                 Log.d(TAG,"the val is " + val );
-                if (val < 0){ processedValues.put(ProcessedDataContract.Column.RECHARGED, true);}
-                processedValues.put(ProcessedDataContract.Column.DIFFERENCE, val); //bad
+                if (val < 0){ processedValues.put(
+                    ProcessedDataContract.Column.RECHARGED, "Recharged");
+                    Log.d(TAG, "putting the default value " + origRechargeValue);
+                    processedValues.put(ProcessedDataContract.Column.DIFFERENCE, origRechargeValue); //bad
+                }else {
+                    processedValues.put(ProcessedDataContract.Column.DIFFERENCE, val); //bad
+                }
+
                 Uri uri = getActivity().getContentResolver().insert(ProcessedDataContract.P_DATA_CONTENT_URI, processedValues);
                 Log.d(TAG, "the diff is: " + val + " of " + day2 + " and " + day);
                 Log.d(TAG, "the uri for the inserted data is " + uri);
@@ -181,6 +191,8 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
         Log.d(TAG, "just loaded the and inserted the new values ");
+
+
 
     }
 
@@ -213,7 +225,7 @@ public class MeterReadingsDiffFragment extends ListFragment implements LoaderMan
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle bundle) {
         if (id != LOADER_ID) return null;
-        return new CursorLoader(getActivity(), ProcessedDataContract.P_DATA_CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), ProcessedDataContract.P_DATA_CONTENT_URI, null, null, null, ProcessedDataContract.DESC_ID_SORT_ORDER);
     }
 
     @Override

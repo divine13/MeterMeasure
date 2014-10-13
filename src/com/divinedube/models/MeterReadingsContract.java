@@ -26,8 +26,10 @@ public class MeterReadingsContract {
 
     public static final int METER_TYPE = 1;
     public static final int METER_DIR = 2;
+
     public static final String THE_DIFF_SELECTION_STATEMENT = "time=?"; //simple to the eye, it was not
     public static final String THE_FRESHEST_SELECTION_STATEMENT = "uploaded = ?";
+    public static final String THE_RECHARGE_STATEMENT = "recharged != ?";
 
     public class Column{
         public static final String ID = BaseColumns._ID;

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -180,6 +181,108 @@ public class MeterUtils {
         return  i;
     }
 
+   public double stringToDouble(String string){
+       if(isStringNumber(string)){
+           return  Double.valueOf(string);
+       }else{
+           return 0;
+       }
+   }
+
+  public static double tariff(){ //in the future might get it from some place server?
+      return 0.838; //in rands this equal 1kw
+  }
+
+  public static double calculateRechargeAmountInRandsFor(double reading){
+         double amount = tariff() * reading;
+         double vat = amount / 14;
 
 
+      return amount + (vat*2);
+  }
+
+    public static String formatDoubleToTwoDecimalString(double number){
+        double theNumber = calculateRechargeAmountInRandsFor(number);
+
+        return twoDecimalDoubleFormatter(theNumber);
+    }
+
+    public static String twoDecimalDoubleFormatter(double number){
+        return  String.format("%.2f", number);
+    }
+
+
+    /*currently this method only works with 1 previous months
+     * i need a way to let the method know how many months are they apart */
+    public static int getDaysAgo(String fromDay, int toOlderDay, int toOlderDayMonth){  //a bit dom
+        int daysAgo = 0;
+        char charAt0 = fromDay.charAt(0);
+        char charAt1 = fromDay.charAt(1);
+        String sDay = "" +  charAt0 + charAt1;
+        sDay = sDay.trim();
+        int fromDayInt = Integer.valueOf(sDay);
+
+        if (fromDayInt >= toOlderDay){ //this means that both dates are still in the same month
+            return fromDayInt - toOlderDay; // return 0 or number not less more than from
+        }else{ // deal with feb some other day
+            for (int i = 0; i < 13; i++ ){  //13 is the number of month.
+                int toMonthEndDaysLeft;
+                switch (toOlderDayMonth){
+                    case 0: //jan ends with 31
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                    break;
+                    case 1: //feb
+                        toMonthEndDaysLeft = 28 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 2: //march
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 3:
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 4:
+                        toMonthEndDaysLeft = 30 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 5: //may
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 6: //june
+                        toMonthEndDaysLeft = 30 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 7:
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 8: //august
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 9:
+                        toMonthEndDaysLeft = 30 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 10:
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 11:
+                        toMonthEndDaysLeft = 30 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                    case 12:
+                        toMonthEndDaysLeft = 31 - toOlderDay;
+                        daysAgo = fromDayInt + toMonthEndDaysLeft;
+                        break;
+                }
+            }
+        }
+        return daysAgo;
+    }
 }

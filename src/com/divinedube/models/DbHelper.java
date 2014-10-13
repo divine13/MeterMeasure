@@ -64,7 +64,7 @@ public class DbHelper extends SQLiteOpenHelper {
               );
 
         String processedData = String.format(                               //goodies   //goodies
-                "create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer, %s boolean default false )",
+                "create table %s (%s integer primary key, %s text, %s text, %s integer, %s integer, %s integer, %s text )",
                     ProcessedDataContract.TABLE,
                     ProcessedDataContract.Column.ID,
                     ProcessedDataContract.Column.DAY_1,

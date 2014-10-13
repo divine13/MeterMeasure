@@ -13,9 +13,9 @@ import com.divinedube.models.MeterReadingsContract;
 /**
  * Created by Divine Dube on 2014/10/04.
  */
-public class UpdateRecharge extends Thread{ //todo change to threadSaving
+public class SaveNewReadings extends Thread{ //todo change to threadSaving
 
-    private static final String TAG = UpdateRecharge.class.getSimpleName();
+    private static final String TAG = SaveNewReadings.class.getSimpleName();
     private String[]  theReadingColumn = {MeterReadingsContract.Column.READING};
     Context context;
     double inputReading;
@@ -24,7 +24,7 @@ public class UpdateRecharge extends Thread{ //todo change to threadSaving
     String note;
 
 
-    public UpdateRecharge(Context context,double inputReading, String day, String time, String note){
+    public SaveNewReadings(Context context, double inputReading, String day, String time, String note){
        this.context = context;
        this.inputReading = inputReading;
        this.day = day;

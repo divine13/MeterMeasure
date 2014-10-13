@@ -5,7 +5,7 @@
     android:versionName="0.0.1" >
 
     <uses-sdk
-        android:minSdkVersion="11"
+        android:minSdkVersion="9"
         android:targetSdkVersion="20" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -79,6 +79,7 @@
         <activity
             android:name="com.divinedube.helpers.Main"
             android:label="main" />
+        <activity android:name=".FragmentAverage" android:label="AVG"/>
 
         <service android:name="com.divinedube.http.MeterMeasureClient" />
         <service android:name="com.divinedube.http.SignUpClient"/>
